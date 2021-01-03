@@ -33,7 +33,7 @@ export default function Login() {
                     {error && <Alert variant="danger">{error}</Alert>}
                     <Form onSubmit={handleSubmit}>
                         <Form.Group id="email">
-                            <Form.Label>Password</Form.Label>
+                            <Form.Label>Email</Form.Label>
                             <Form.Control type="email" ref={emailRef} required>
                             </Form.Control>
                         </Form.Group>

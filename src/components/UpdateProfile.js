@@ -4,10 +4,10 @@ import { useAuth } from '../contexts/AuthContext'
 import { Link, useHistory } from 'react-router-dom'
 
 export default function UpdateProfile() {
-    const emailRef = useRef();
+    const passwordOldRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
-    const { currentUser, updateEmail, updatePassword } = useAuth();
+    const { currentUser, updatePassword } = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const history = useHistory();
@@ -18,12 +18,14 @@ export default function UpdateProfile() {
             return setError('Passwords do not match');
         };
 
+        if (passwordOldRef.current.value !== currentUser.email) {
+            console.log(currentUser.email);
+            return setError('This is not the current password we have on file');
+        };
+
         const promises = [];
         setLoading(true);
         setError('');
-        if (emailRef.current.value !== currentUser.email) {
-            promises.push(updatePassword(emailRef.current.value));
-        }
         if (passwordRef.current.value) {
             promises.push(updatePassword(passwordRef.current.value));
         };
@@ -44,28 +46,26 @@ export default function UpdateProfile() {
                     <h2>Update Profile</h2>
                     {error && <Alert variant="danger">{error}</Alert>}
                     <Form onSubmit={handleSubmit}>
-                        <Form.Group id="email">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="email" ref={emailRef} required
-                                defaultValue={currentUser.email}>
+                    <Form.Group id="passwordOld">
+                            <Form.Label>Current Password</Form.Label>
+                            <Form.Control type="password" ref={passwordRef}>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group id="password">
-                            <Form.Label>Change Password</Form.Label>
-                            <Form.Control type="password" ref={passwordRef} required
-                                placeholder="New password">
+                            <Form.Label>New Password</Form.Label>
+                            <Form.Control type="password" ref={passwordRef}>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group id="passwordConfirm">
-                            <Form.Label>Confirm Password</Form.Label>
-                            <Form.Control type="password" ref={passwordConfirmRef} required>
+                            <Form.Label>Confirm New Password</Form.Label>
+                            <Form.Control type="password" ref={passwordConfirmRef}>
                             </Form.Control>
                         </Form.Group>
                         <Button disabled={loading} type="submit">Update</Button>
                     </Form>
                 </Card.Body>
             </Card>
-            <div className="text-center mt-2"><Link to="./Login">Chancel</Link></div>
+            <div className="text-center mt-2"><Link to="./Login">Cancel</Link></div>
         </div>
     )
 }

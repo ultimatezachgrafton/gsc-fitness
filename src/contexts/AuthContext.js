@@ -25,10 +25,6 @@ export function AuthProvider({ children }) {
 
     function resetPassword(email) {
         return auth.sendPasswordResetEmail(email);
-    }
-
-    function updateEmail(email) {
-        return currentUser.updateEmail(email);
     };
 
     function updatePassword(password) {
@@ -48,7 +44,9 @@ export function AuthProvider({ children }) {
         currentUser,
         signup,
         login,
-        logout
+        logout,
+        resetPassword,
+        updatePassword
     };
 
 
@@ -56,5 +54,5 @@ export function AuthProvider({ children }) {
         <AuthContext.Provider value={value}>
             {!loading && children}
         </AuthContext.Provider>
-    )
+    );
 }

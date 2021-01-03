@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
+require("firebase/firestore");
 
 const app = firebase.initializeApp({
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -11,6 +12,24 @@ const app = firebase.initializeApp({
     appId: process.env.REACT_APP_FIREBASE_APP_ID,
     measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 });
+
+let db = firebase.firestore(app);
+const colRef = db.collection("users");
+const docRef = colRef.doc("Ben Grafton");
+// const output = document.querySelector("Benjamin Grafton");
+// const input = document.querySelector("Ben rules");
+
+export function saveData(input) {
+    const textToSave = input.value;
+    console.log(textToSave);
+    docRef.set({
+        handsome: "yes"
+    }).then(function() {
+        console.log("saved");
+    }).catch(function(error) {
+        console.log("error");
+    });
+}
 
 export const auth=app.auth();
 export default app;
