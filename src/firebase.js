@@ -14,22 +14,64 @@ const app = firebase.initializeApp({
 });
 
 let db = firebase.firestore(app);
+const user = app.auth().currentUser;
 const colRef = db.collection("users");
-const docRef = colRef.doc("Ben Grafton");
-// const output = document.querySelector("Benjamin Grafton");
-// const input = document.querySelector("Ben rules");
 
-export function saveData(input) {
-    const textToSave = input.value;
-    console.log(textToSave);
+export async function getCurrentUserEmail() {
+    if (user !== null) {
+        return user.email;
+    }
+}
+
+export async function getUserData(emailRef) {
+    // find database matching emailRef
+    if (user !== null) {
+        return user.displayName;
+    }
+}
+
+export async function searchUserDatabase() {
+    if (user !== null) {
+        return colRef;
+    }
+}
+
+// Initially adds user's doc to that collection
+export async function updateUserDataFromSignUp(nameRef, phoneRef, emailRef) {
+    const docRef = db.collection("users").doc(emailRef);
     docRef.set({
-        handsome: "yes"
-    }).then(function() {
+        name: nameRef,
+        phone: phoneRef,
+        email: emailRef        
+    }).then(function () {
         console.log("saved");
-    }).catch(function(error) {
+    }).catch(function (error) {
         console.log("error");
     });
 }
 
-export const auth=app.auth();
+// Updates an existing user's data
+export async function updateUserDataFromProfile(phoneRef) {
+    const emailRef = await getCurrentUserEmail();
+
+    if (emailRef !== null) {
+        let docRef = db.collection("users").doc(emailRef);
+        docRef.update({
+            phone: phoneRef
+        }).then(function () {
+            console.log("saved");
+        }).catch(function (error) {
+            console.log("error");
+        });
+    }
+}
+
+export async function checkAdminStatus(emailRef) {
+    if (emailRef !== null) {
+        let docRef = db.collection("users").doc(emailRef);
+        return docRef.isAdmin;
+    }
+}
+
+export const auth = app.auth();
 export default app;

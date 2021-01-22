@@ -7,7 +7,7 @@ import PrivateRoute from './PrivateRoute';
 import Dashboard from './Dashboard';
 import SignUp from './SignUp';
 import Login from './Login';
-import ForgotPassword from './ForgotPassword';
+import ChangePassword from './ChangePassword';
 import UpdateProfile from './UpdateProfile';
 
 class App extends Component {
@@ -25,7 +25,7 @@ class App extends Component {
                                     <PrivateRoute exact path="/update-profile" component={UpdateProfile}/>
                                     <Route path="/signUp" component={SignUp}/>
                                     <Route path="/login" component={Login}/>
-                                    <Route path="/forgot-password" component={ForgotPassword}/>
+                                    <Route path="/change-password" component={ChangePassword}/>
                                 </Switch>
                             </AuthProvider>
                         </Router>
@@ -37,3 +37,10 @@ class App extends Component {
 }
 
 export default App;
+
+// Next step:
+// create admin find a user list for Ben to select which users' profile to view
+// add to list the links for Ben to add Nutrition and Workout google docs to clients' dashboards
+// create user dashboards list for users to view and select docs to view and update
+// user profiles should include: isAdmin, birthdate, join date, weight, phone, name, email, dietary restrictions, other notes
+// possibly graph for weight, calories

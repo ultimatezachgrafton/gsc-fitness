@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { Form, Button, Card, Alert } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext'
 import { Link, useHistory } from 'react-router-dom'
-import { saveData} from '../firebase.js'
+import { updateUserDataFromSignUp } from '../firebase.js'
 
 export default function SignUp() {
     const nameRef = useRef();
@@ -15,8 +15,6 @@ export default function SignUp() {
     const [loading, setLoading] = useState(false);
     const history = useHistory();
 
-
-
     async function handleSubmit(e) {
         e.preventDefault();
         if (passwordRef.current.value !== passwordConfirmRef.current.value) {
@@ -26,15 +24,16 @@ export default function SignUp() {
         try {
             setError('');
             setLoading(true);
+            
+            // check if email already exists, then
             await signup(emailRef.current.value, passwordRef.current.value);
-            // create new profile with nameRef.current.value, phoneRef.current.value
-            await saveData("hi");
+            
+            await updateUserDataFromSignUp(nameRef.current.value, phoneRef.current.value, emailRef.current.value);
             history.push('/');
         } catch {
-            setError('Failed to create account');
+            setError('Failed to create account. Please try again.');
         };
         setLoading(false);
-
         
     };
 
