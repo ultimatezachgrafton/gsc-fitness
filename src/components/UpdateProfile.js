@@ -30,6 +30,8 @@ export default function UpdateProfile() {
         )
     };
 
+    // profile contains phone number, password change option, photo, TBD
+
     return (
         <div>
             <Card>
@@ -46,7 +48,7 @@ export default function UpdateProfile() {
                     </Form>
                 </Card.Body>
             </Card>
-            <div className="text-center mt-2"><Link to="./ForgotPassword">Change Password</Link></div>
+            <div className="text-center mt-2"><Link to="./ChangePassword">Change Password</Link></div>
             <div className="text-center mt-2"><Link to="./Login">Cancel</Link></div>
         </div>
     )

@@ -31,9 +31,23 @@ export async function getUserData(emailRef) {
 }
 
 export async function searchUserDatabase() {
-    if (user !== null) {
-        return colRef;
-    }
+    let userList = [];
+
+    await colRef.get().then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+            db.collection("users").onSnapshot((snapshot) => {
+                snapshot.forEach((doc) => userList.push({
+                    ...doc.data(), id: doc.id, email: doc.email,
+                    phone: doc.phone, isAdmin: doc.isAdmin
+                }));
+                console.log(userList);
+            });
+        });
+    });
+    console.log(userList);
+    return userList;
 }
 
 // Initially adds user's doc to that collection
@@ -42,7 +56,7 @@ export async function updateUserDataFromSignUp(nameRef, phoneRef, emailRef) {
     docRef.set({
         name: nameRef,
         phone: phoneRef,
-        email: emailRef        
+        email: emailRef
     }).then(function () {
         console.log("saved");
     }).catch(function (error) {

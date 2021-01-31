@@ -28,7 +28,7 @@ export default function Login() {
     return (
         <div>
 
-            {/* header w/ ben info */}
+            {/* header w/ ben info, social media */}
 
             <Card>
                 <Card.Body>
