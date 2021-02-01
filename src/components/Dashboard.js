@@ -3,32 +3,13 @@ import { Card, Button, Alert } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext'
 import { Link, useHistory } from 'react-router-dom'
 import { getUserData, checkAdminStatus, searchUserDatabase } from '../firebase.js'
-// import AdminUserList from '/'
+import AdminUserList from './AdminUserList'
 
 export default function Dashboard() {
 
     const [error, setError] = useState("");
     const { currentUser, logout } = useAuth();
     const history = useHistory();
-    const [userList, setUserList] = useState([]);
-
-    useEffect(() => {
-        const userArray = [];
-
-        const renderUserList = async () => {
-            await searchUserDatabase().then(user => userArray.push(user))
-                .then(await setUserList(userArray))
-                .then(console.log(userArray))
-                .catch(error => "error");
-        }
-
-        renderUserList();
-        console.log(userArray);
-    }, []);
-
-    const trackUserList = () => {
-
-    }
 
     const renderAdminSearchButton = () => {
         const userData = getUserData(currentUser.email);
@@ -73,19 +54,9 @@ export default function Dashboard() {
                         <Button variant="link" onClick={handleLogout}>Log Out</Button>
                     </div>
 
-                    <div>User List:
-                        {Object.keys(userList).map((key) => {
-                        return (
-                            <div key={key}>{key}
-                                {userList[key].map((user) => {
-                                    return (
-                                        <div key={user.id}>{user.id}</div>
-                                    )
-                                })}
-                            </div>
-                        )
-                    })}
-                    </div>
+                    <div>User List: </div>
+
+                    <AdminUserList/>
 
 
                 </Card.Body>
