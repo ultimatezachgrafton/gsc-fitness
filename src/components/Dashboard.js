@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Card, Button, Alert } from 'react-bootstrap'
+import { Form, Alert, Button } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext'
 import { Link, useHistory } from 'react-router-dom'
-import { getUserData, checkAdminStatus, searchUserDatabase } from '../firebase.js'
+import { getUserData, checkAdminStatus } from '../firebase.js'
 import AdminUserList from './AdminUserList'
+import "../css/Dashboard.css"
 
 export default function Dashboard() {
 
@@ -11,12 +12,39 @@ export default function Dashboard() {
     const { currentUser, logout } = useAuth();
     const history = useHistory();
 
-    const renderAdminSearchButton = () => {
-        const userData = getUserData(currentUser.email);
+    const renderAdminUserList = () => {
         if (checkAdminStatus(currentUser.email)) {
-            return <button variant="link" onClick={searchUserDatabase}>Find user</button>
-        } else {
-            return;
+            return <div> <AdminUserList /> </div>
+        }
+    }
+
+    const renderUserProfile = () => {
+        if (!checkAdminStatus(currentUser.email)) {
+            return <div>
+
+                <strong>Email: </strong>{currentUser.email}<br />
+                <strong>Phone: </strong>{currentUser.phone}<br />
+
+                <Link to="/workouts" className="btn btn-primary w-100 mt-3">
+                    <strong> Workouts </strong>
+                </Link>
+
+                <Link to="/workout-history" className="btn btn-primary w-100 mt-3">
+                    <strong> Workout History</strong>
+                </Link>
+
+                <Link to="/nutrition-plan" className="btn btn-primary w-100 mt-3">
+                    <strong> Nutrition Plan</strong>
+                </Link>
+
+                <Link to="/email-ben" className="btn btn-primary w-100 mt-3">
+                    <strong>Email Ben</strong>
+                </Link>
+
+                <Link to="/update-profile" className="btn btn-primary w-100 mt-3">
+                    <strong>Update Profile</strong>
+                </Link>
+            </div>
         }
     }
 
@@ -32,35 +60,17 @@ export default function Dashboard() {
 
     return (
         <div>
-            <Card>
-                <Card.Body>
-                    <h2 className="text-center mb-4">Profile</h2>
-                    {error && <Alert variant="danger">{error}</Alert>}
-                    <strong>Name: </strong>{currentUser.displayName}<br />
-                    <strong>Email: </strong>{currentUser.email}<br />
+            <Form id="dashboard-form" className="mt-5">
+                <h2 className="mb-4">Welcome, {currentUser.displayName}!</h2>
+                {error && <Alert variant="danger">{error}</Alert>}
 
-                    <strong>Workout History</strong><br />
+                {renderUserProfile()}
+               
+            </Form>
 
-                    <Link to="/email-ben" className="btn btn-primary w-100 mt-3">
-                        Email Ben
-                    </Link>
+            <div>{renderAdminUserList()} </div>
+            <Button className="p-0" variant="link" onClick={handleLogout}>Log Out</Button>
 
-                    <Link to="/update-profile" className="btn btn-primary w-100 mt-3">
-                        Update Profile
-                    </Link>
-
-                    <div className="text-center mt-2">
-                        {renderAdminSearchButton()}
-                        <Button variant="link" onClick={handleLogout}>Log Out</Button>
-                    </div>
-
-                    <div>User List: </div>
-
-                    <AdminUserList/>
-
-
-                </Card.Body>
-            </Card>
-        </div >
+        </div>
     )
 }

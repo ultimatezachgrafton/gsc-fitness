@@ -31,23 +31,21 @@ export async function getUserData(emailRef) {
 }
 
 export async function searchUserDatabase() {
-    let userList = [];
+    const users = [];
 
     await colRef.get().then(function (querySnapshot) {
-        querySnapshot.forEach(function (doc) {
-            // doc.data() is never undefined for query doc snapshots
+        querySnapshot.forEach(function(doc) {
             console.log(doc.id, " => ", doc.data());
-            db.collection("users").onSnapshot((snapshot) => {
-                snapshot.forEach((doc) => userList.push({
-                    ...doc.data(), id: doc.id, email: doc.email,
-                    phone: doc.phone, isAdmin: doc.isAdmin
-                }));
-                console.log(userList);
-            });
+            users.push([doc.id, doc.data().name, doc.data().phone]);
         });
     });
-    console.log(userList);
-    return userList;
+    console.log(users);
+    return users;
+}
+
+export async function searchUserDatabaseForUsername(emailRef) {
+    console.log("firebase");
+    return "arrowny@aol.com"
 }
 
 // Initially adds user's doc to that collection

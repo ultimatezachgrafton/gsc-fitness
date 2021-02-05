@@ -9,27 +9,25 @@ import SignUp from './SignUp';
 import Login from './Login';
 import ChangePassword from './ChangePassword';
 import UpdateProfile from './UpdateProfile';
+import AdminUserProfile from './AdminUserProfile';
 
 class App extends Component {
     render() {
         return (
             <div>
-                <Container className="d-flex align-items-center justify-content-center"
-                    style={{ minHeight: "100vh" }}
-                >
-                    <div className="w-100" style={{ maxWidth: "400px" }}>
-                        <Router>
-                            <AuthProvider>
-                                <Switch>
-                                    <PrivateRoute exact path="/" component={Dashboard}/>
-                                    <PrivateRoute exact path="/update-profile" component={UpdateProfile}/>
-                                    <Route path="/signUp" component={SignUp}/>
-                                    <Route path="/login" component={Login}/>
-                                    <Route path="/change-password" component={ChangePassword}/>
-                                </Switch>
-                            </AuthProvider>
-                        </Router>
-                    </div>
+                <Container>
+                    <Router>
+                        <AuthProvider>
+                            <Switch>
+                                <PrivateRoute exact path="/" component={Dashboard} />
+                                <PrivateRoute exact path="/update-profile" component={UpdateProfile} />
+                                <Route path="/sign-up" component={SignUp} />
+                                <Route path="/login" component={Login} />
+                                <Route path="/change-password" component={ChangePassword} />
+                                <Route path="/:handle" component={AdminUserProfile}/>
+                            </Switch>
+                        </AuthProvider>
+                    </Router>
                 </Container>
             </div>
         );
