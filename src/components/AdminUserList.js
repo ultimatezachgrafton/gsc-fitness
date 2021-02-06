@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { Card, Form, Button } from 'react-bootstrap'
-import { searchUserDatabase, searchUserDatabaseForUsername } from '../firebase.js'
-import "../css/AdminUserList.css"
+import { Form, Button } from 'react-bootstrap'
+import { searchUserDatabase } from '../firebase.js'
+import UserTable from './UserTable.js'
+import Pagination from './Pagination.js'
+import '../css/AdminUserList.css'
 
 export default class AdminUserList extends Component {
     constructor(props) {
@@ -9,7 +11,7 @@ export default class AdminUserList extends Component {
         this.state = {
             users: [],
             loading: false,
-            userSearch: ""
+            userSearchValue: ""
         }
         this.handleChange = this.handleChange.bind(this);
         this.searchUser = this.searchUser.bind(this);
@@ -17,49 +19,39 @@ export default class AdminUserList extends Component {
     }
 
     componentDidMount = async () => {
-        this.setState({ loading: true });
-        const data = await searchUserDatabase().catch(error => "error");
-        this.setState({ users: data, loading: false });
+        await this.loadUsers(1);
     }
 
-    async handleChange(event) {
-        event.preventDefault();
-        await this.setState({ loading: true });
-        const { value } = event.target;
-        await this.setState({ userSearch: value });
-        // console.log("change" + this.state.userSearch);
-
-        this.searchUser(event);
-    };
-
-
-    // TODO OK!!! "users" is taking every array element as a user; needs to be an array of arrays
-    async searchUser(event) {
-        event.preventDefault();
-        // console.log("search" + this.state.userSearch);
-        console.log("length1" + this.state.users.length);
-        console.log("users: " + this.state.users);
-        // this is only taking the first letter typed
-        // changing to 1 because the 
-        const numberOfUsers = this.state.users.length;
-        for (let i = 0; i < numberOfUsers; i++) {
-            if (this.state.users[i].indexOf(this.state.userSearch) > -1) {
-                console.log("length2" + this.state.users.length);
-                console.log(this.state.userSearch + " found inside your_string " + this.state.users[i]);
-                await this.setState({ users: this.state.userSearch });
-                
-            };
-            // TODO: if bar clear, show all users again
-            // when empty, erroneously displays twice
-        }
-        console.log(this.state.users + "search: " + this.state.userSearch);
-        this.setState({ loading: false });
-    };
-
     async loadUsers(pageNumber) {
-        let response = await fetch(`https://swapi.dev/api/people/?page=${pageNumber}`);
-        let data = await response.json();
-        this.setState({ characters: data.results });
+        this.setState({ loading: true });
+        const data = await searchUserDatabase().catch(error => "error");
+        await this.setState({ users: data, loading: false });
+        console.log(this.state.users);
+    };
+
+    async handleChange(event) {
+        const { value } = event.target;
+        await this.setState({ userSearchValue: value });
+        console.log(this.state.userSearchValue);
+
+        if (this.state.userSearchValue === "") {
+            this.setState({ users: [] });
+            this.loadUsers(1);          
+        }
+    };
+
+    searchUser = async (event) => {
+        event.preventDefault();
+        this.setState({ loading: true });
+
+        for (let i = 0; i < this.state.users.length; i++) {
+            if (this.state.users[i][0] === this.state.userSearchValue) {
+                await this.setState({ users: [this.state.users[i]], loading: false });
+                console.log(this.state.users);
+                return;
+            }
+        }
+        this.setState({ loading: false });
     };
 
     render() {
@@ -67,29 +59,29 @@ export default class AdminUserList extends Component {
             <div>
                 <Form>
                     <Form inline>
-                        <Form.Control type="text" className="w-25" defaultValue={this.state.userSearch} searchUser={this.searchUser}
+                        <Form.Control type="text" className="w-25" defaultValue={this.state.userSearchValue} searchUser={this.searchUser}
                             onChange={this.handleChange} placeholder="Enter user's name or email" />
                         <Button type="submit" onClick={this.searchUser} className="mb-2">
                             <strong>Find User</strong>
                         </Button>
                     </Form>
-                    <div id="user-list">
-                        {this.state.loading ? "Loading" : this.state.users }
-                            {/* // this.state.users.length > 0 ? this.state.users.map((user) =>
-                            //     <Card>
-                            //         <Card.Link href={`/${user[0]}`} className="user-card" key={user[0]}>
-                            //             {user}
-                            //         </Card.Link></Card>) :
-                                // "Error loading users, try refreshing. If problem persists, contact admin." } */}
+                    <div id="user-table">
+                        {(this.state.loading) ? "... loading ..." : this.state.users.length > 0 ?
+                            <UserTable
+                                key={this.state.users}
+                                users={this.state.users}
+                            />
+                            : "Error loading users, try refreshing. If problem persists, contact admin."}
                     </div>
                 </Form>
-            </div>
+                {/* <Pagination loadUsers={this.loadUsers} /> */}
+            </div >
         )
     }
 }
 
-// Make search bar onChange load and reflect users as input is entered
+// make search work for last name as well
 // Paginate results
-// Make cards display dynamically and link properly
-// Design user cards using react bootstrap Card
+// Make rows link properly
 // Design profiles
+// new user registration emails ben a notification

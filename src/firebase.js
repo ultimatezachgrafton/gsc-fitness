@@ -13,7 +13,7 @@ const app = firebase.initializeApp({
     measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 });
 
-let db = firebase.firestore(app);
+const db = firebase.firestore(app);
 const user = app.auth().currentUser;
 const colRef = db.collection("users");
 
@@ -32,20 +32,14 @@ export async function getUserData(emailRef) {
 
 export async function searchUserDatabase() {
     const users = [];
-
     await colRef.get().then(function (querySnapshot) {
-        querySnapshot.forEach(function(doc) {
+        querySnapshot.forEach(function (doc) {
             console.log(doc.id, " => ", doc.data());
             users.push([doc.id, doc.data().name, doc.data().phone]);
         });
     });
     console.log(users);
     return users;
-}
-
-export async function searchUserDatabaseForUsername(emailRef) {
-    console.log("firebase");
-    return "arrowny@aol.com"
 }
 
 // Initially adds user's doc to that collection
