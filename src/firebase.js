@@ -35,7 +35,8 @@ export async function searchUserDatabase() {
     await colRef.get().then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
             console.log(doc.id, " => ", doc.data());
-            users.push([doc.id, doc.data().name, doc.data().phone]);
+            users.push(doc.data());
+            // users.push([doc.id, doc.data().lastName, doc.data().firstName, doc.data().phone]);
         });
     });
     console.log(users);
@@ -54,6 +55,8 @@ export async function updateUserDataFromSignUp(nameRef, phoneRef, emailRef) {
     }).catch(function (error) {
         console.log("error");
     });
+
+    // ben is emailed
 }
 
 // Updates an existing user's data

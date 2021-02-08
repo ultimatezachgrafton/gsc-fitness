@@ -9,79 +9,120 @@ export default class AdminUserList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            users: [],
+            usersFromDatabase: [],
+            usersDisplayed: [],
+            usersSearched: [],
             loading: false,
-            userSearchValue: ""
+            userSearchValue: "",
+            maxPerPage: 10
         }
         this.handleChange = this.handleChange.bind(this);
+        this.getInitialUserData = this.getInitialUserData.bind(this);
         this.searchUser = this.searchUser.bind(this);
-        this.loadUsers = this.loadUsers.bind(this);
+        this.loadUserPages = this.loadUserPages.bind(this);
     }
 
     componentDidMount = async () => {
-        await this.loadUsers(1);
+        await this.getInitialUserData();
     }
 
-    async loadUsers(pageNumber) {
+    async getInitialUserData() {
         this.setState({ loading: true });
         const data = await searchUserDatabase().catch(error => "error");
-        await this.setState({ users: data, loading: false });
-        console.log(this.state.users);
-    };
+        this.setState({ usersFromDatabase: data, loading: false });
+        this.loadUserPages(1);
+    }
+
+    async loadUserPages(pageNumber) {
+        this.setState({ loading: true });
+        let currentPage = [];
+
+        const initialElement = (pageNumber - 1) * this.state.maxPerPage;
+        const finalPageElement = this.state.usersFromDatabase.length - (this.state.usersFromDatabase.length % this.state.maxPerPage);
+        const remainder = (this.state.usersFromDatabase.length % this.state.maxPerPage);
+
+        if (initialElement === finalPageElement) {
+            for (let i = ((pageNumber - 1) * this.state.maxPerPage); i < initialElement + remainder; i++) {
+                currentPage.push(this.state.usersFromDatabase[i]);
+                console.log("final page " + i);
+                this.setState({ usersDisplayed: currentPage, loading: false });
+            }
+        } else {
+            for (let i = ((pageNumber - 1) * this.state.maxPerPage); i < initialElement + this.state.maxPerPage; i++) {
+                currentPage.push(this.state.usersFromDatabase[i]);
+                console.log("user: " + this.state.usersFromDatabase[i]);
+                console.log("i: " + i);
+                console.log(currentPage);
+                this.setState({ usersDisplayed: currentPage, loading: false });
+            };
+            ;
+        };
+    }
 
     async handleChange(event) {
-        const { value } = event.target;
-        await this.setState({ userSearchValue: value });
-        console.log(this.state.userSearchValue);
+        await this.setState({ userSearchValue: event.target.value });
 
+        this.searchUser(event);
+
+        // Reset table once input values cleared from search bar
         if (this.state.userSearchValue === "") {
-            this.setState({ users: [] });
-            this.loadUsers(1);          
+            this.setState({ usersDisplayed: [] });
+            this.loadUserPages(1);
         }
     };
 
     searchUser = async (event) => {
         event.preventDefault();
-        this.setState({ loading: true });
+        this.setState({ usersDisplayed: [], loading: true });
+        let usersSearched = [];
+        let maxSearchResults = 10;
 
-        for (let i = 0; i < this.state.users.length; i++) {
-            if (this.state.users[i][0] === this.state.userSearchValue) {
-                await this.setState({ users: [this.state.users[i]], loading: false });
-                console.log(this.state.users);
+        // Searches for email, then last name, then first name
+        for (let i = 0; i < this.state.usersFromDatabase.length && i < maxSearchResults; i++) {
+
+            if (this.state.usersFromDatabase[i].email.toLowerCase().includes(this.state.userSearchValue.toLowerCase())) {
+                this.setState({ usersDisplayed: [this.state.usersFromDatabase[i]], loading: false });
                 return;
+
+            } else if (this.state.usersFromDatabase[i].lastName.toLowerCase().includes(this.state.userSearchValue.toLowerCase())) {
+                usersSearched.push(this.state.usersFromDatabase[i]);
+
+            } if (this.state.usersFromDatabase[i].firstName.toLowerCase().includes(this.state.userSearchValue.toLowerCase())) {
+                usersSearched.push(this.state.usersFromDatabase[i]);
             }
+
+            this.setState({ usersDisplayed: usersSearched });
         }
         this.setState({ loading: false });
-    };
+    }
+
 
     render() {
         return (
             <div>
-                <Form>
+                
                     <Form inline>
-                        <Form.Control type="text" className="w-25" defaultValue={this.state.userSearchValue} searchUser={this.searchUser}
+                        <Form.Control type="text" className="w-25" defaultValue={this.state.userSearchValue}
                             onChange={this.handleChange} placeholder="Enter user's name or email" />
                         <Button type="submit" onClick={this.searchUser} className="mb-2">
                             <strong>Find User</strong>
                         </Button>
                     </Form>
                     <div id="user-table">
-                        {(this.state.loading) ? "... loading ..." : this.state.users.length > 0 ?
+                        {(this.state.loading) ? "... loading ..." : this.state.usersDisplayed.length > 0 ?
                             <UserTable
-                                key={this.state.users}
-                                users={this.state.users}
+                                key={this.state.usersDisplayed}
+                                users={this.state.usersDisplayed}
                             />
-                            : "Error loading users, try refreshing. If problem persists, contact admin."}
+                            : "Cannot find this user."}
                     </div>
-                </Form>
-                {/* <Pagination loadUsers={this.loadUsers} /> */}
+                
+                <Pagination loadUserPages={this.loadUserPages} users={this.state.usersFromDatabase} maxPerPage={this.state.maxPerPage} />
             </div >
         )
     }
 }
 
-// make search work for last name as well
-// Paginate results
-// Make rows link properly
+// tomorrow:
 // Design profiles
-// new user registration emails ben a notification
+// via new user registration, a banner tells ben who his new signups are

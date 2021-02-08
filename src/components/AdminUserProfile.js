@@ -25,7 +25,7 @@ export default class AdminUserProfile extends Component {
     render() {
         return (
             <div>
-                {this.state.user}
+                {this.state.user} 
             </div>
         )
     }

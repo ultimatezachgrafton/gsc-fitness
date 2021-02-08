@@ -1,20 +1,21 @@
-import React from "react";
+import React from 'react'
+import { Table } from 'react-bootstrap'
 
 function UserTable(props) {
     let tableRows = [];
 
     for (let i = 0; i < props.users.length; i++) {
         let user = props.users[i];
-        tableRows.push(<tr key={user[0]}>
-            <td>{user[1]}</td>
-            <td>{user[0]}</td>
-            <td>{user[2]}</td>
+        tableRows.push(<tr key={user.email}>
+            <td><a href={`users=${user.email}`}> {user.lastName}, {user.firstName}</a> </td>
+            <td><a href={`users=${user.email}`}>{user.email}</a></td>
+            <td>{user.phone}</td>
         </tr>);
     }
 
     return (
-        <table className="table table-dark">
-            <thead className="thead-light">
+        <Table striped bordered hover variant="dark">
+            <thead>
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
@@ -24,7 +25,7 @@ function UserTable(props) {
             <tbody>
                 {tableRows}
             </tbody>
-        </table>
+        </Table>
     )
 }
 
