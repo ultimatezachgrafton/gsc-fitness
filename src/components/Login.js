@@ -1,24 +1,42 @@
-import React, { useRef, useState } from 'react'
-import { Form, Button, Card, Alert } from 'react-bootstrap'
-import { useAuth } from '../contexts/AuthContext'
-import { Link, useHistory } from 'react-router-dom' 
+import React, { useRef, useState, useEffect } from 'react';
+import { Form, Button, Card, Alert } from 'react-bootstrap';
+import { useAuth } from '../contexts/AuthContext';
+import { Link, useHistory } from 'react-router-dom';
+import { checkAdminStatus } from '../firebase';
 
 export default function Login() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const { login } = useAuth();
+    const [status, setStatus] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const history = useHistory();
 
+    useEffect(() => {
+        handleSubmit()
+    }, [handleSubmit]);
+
     async function handleSubmit(e) {
         e.preventDefault();
+        console.log("handle")
+
+
 
         try {
             setError('');
             setLoading(true);
-            await login(emailRef.current.value, passwordRef.current.value);
-            history.push('/');
+
+
+            setStatus(checkAdminStatus(emailRef.current.value));
+            console.log(checkAdminStatus(emailRef.current.value));
+            // await login(emailRef.current.value, passwordRef.current.value);
+
+            // if (status) {
+            // history.push('/');
+            // } else {
+            // history.push(`users/${emailRef}`)
+            // }
         } catch {
             setError('Failed to log in');
         };
@@ -27,8 +45,6 @@ export default function Login() {
 
     return (
         <div>
-
-            {/* header w/ ben info, social media */}
 
             <Card>
                 <Card.Body>

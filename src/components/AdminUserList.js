@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { Form, Button } from 'react-bootstrap'
-import { searchUserDatabase } from '../firebase.js'
-import UserTable from './UserTable.js'
-import Pagination from './Pagination.js'
-import '../css/AdminUserList.css'
+import React, { Component } from 'react';
+import { Form, Button } from 'react-bootstrap';
+import { searchUserDatabase } from '../firebase.js';
+import AdminUserTable from './AdminUserTable.js';
+import Pagination from './Pagination.js';
+import '../css/AdminUserList.css';
 
 export default class AdminUserList extends Component {
     constructor(props) {
@@ -44,15 +44,11 @@ export default class AdminUserList extends Component {
         if (initialElement === finalPageElement) {
             for (let i = ((pageNumber - 1) * this.state.maxPerPage); i < initialElement + remainder; i++) {
                 currentPage.push(this.state.usersFromDatabase[i]);
-                console.log("final page " + i);
                 this.setState({ usersDisplayed: currentPage, loading: false });
             }
         } else {
             for (let i = ((pageNumber - 1) * this.state.maxPerPage); i < initialElement + this.state.maxPerPage; i++) {
                 currentPage.push(this.state.usersFromDatabase[i]);
-                console.log("user: " + this.state.usersFromDatabase[i]);
-                console.log("i: " + i);
-                console.log(currentPage);
                 this.setState({ usersDisplayed: currentPage, loading: false });
             };
             ;
@@ -110,7 +106,7 @@ export default class AdminUserList extends Component {
                     </Form>
                     <div id="user-table">
                         {(this.state.loading) ? "... loading ..." : this.state.usersDisplayed.length > 0 ?
-                            <UserTable
+                            <AdminUserTable
                                 key={this.state.usersDisplayed}
                                 users={this.state.usersDisplayed}
                             />
@@ -122,7 +118,3 @@ export default class AdminUserList extends Component {
         )
     }
 }
-
-// tomorrow:
-// Design profiles
-// via new user registration, a banner tells ben who his new signups are

@@ -1,5 +1,5 @@
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import firebase from 'firebase/app';
+import 'firebase/auth';
 require("firebase/firestore");
 
 const app = firebase.initializeApp({
@@ -36,7 +36,6 @@ export async function searchUserDatabase() {
         querySnapshot.forEach(function (doc) {
             console.log(doc.id, " => ", doc.data());
             users.push(doc.data());
-            // users.push([doc.id, doc.data().lastName, doc.data().firstName, doc.data().phone]);
         });
     });
     console.log(users);
@@ -64,8 +63,7 @@ export async function updateUserDataFromProfile(phoneRef) {
     const emailRef = await getCurrentUserEmail();
 
     if (emailRef !== null) {
-        let docRef = db.collection("users").doc(emailRef);
-        docRef.update({
+        colRef.doc(emailRef).update({
             phone: phoneRef
         }).then(function () {
             console.log("saved");
@@ -77,8 +75,19 @@ export async function updateUserDataFromProfile(phoneRef) {
 
 export async function checkAdminStatus(emailRef) {
     if (emailRef !== null) {
-        let docRef = db.collection("users").doc(emailRef);
-        return docRef.isAdmin;
+        console.log(emailRef);
+
+        await colRef.doc(emailRef).get().then((doc) => {
+            if (doc.exists) {
+                console.log("Document data:", doc.data().isAdmin);
+                return doc.data().isAdmin;
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
     }
 }
 

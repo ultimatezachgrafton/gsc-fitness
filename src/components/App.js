@@ -4,12 +4,13 @@ import { Container } from 'react-bootstrap';
 import { AuthProvider } from '../contexts/AuthContext';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
-import Dashboard from './Dashboard';
+import UserDashboard from'./UserDashboard';
+import AdminDashboard from './AdminDashboard';
+import AdminUserProfile from './AdminUserProfile';
 import SignUp from './SignUp';
 import Login from './Login';
 import ChangePassword from './ChangePassword';
 import UpdateProfile from './UpdateProfile';
-import AdminUserProfile from './AdminUserProfile';
 
 class App extends Component {
     render() {
@@ -19,12 +20,13 @@ class App extends Component {
                     <Router>
                         <AuthProvider>
                             <Switch>
-                                <PrivateRoute exact path="/" component={Dashboard} />
-                                <PrivateRoute exact path="/update-profile" component={UpdateProfile} />
+                                <PrivateRoute exact path="/" component={AdminDashboard} />
                                 <Route path="/sign-up" component={SignUp} />
                                 <Route path="/login" component={Login} />
                                 <Route path="/change-password" component={ChangePassword} />
-                                <Route path="/:handle" component={AdminUserProfile}/>
+                                <PrivateRoute path="/update-profile" component={UpdateProfile} />
+                                <PrivateRoute path="/:handle" component={AdminUserProfile} />
+                                <PrivateRoute path="/:handle" component={UserDashboard} />
                             </Switch>
                         </AuthProvider>
                     </Router>
@@ -37,8 +39,11 @@ class App extends Component {
 export default App;
 
 // Next step:
-// create admin find a user list for Ben to select which users' profile to view
 // add to list the links for Ben to add Nutrition and Workout google docs to clients' dashboards
 // create user dashboards list for users to view and select docs to view and update
+// {/* header w/ ben info, social media */}
+
+// tomorrow:
+// Design profiles
 // user profiles should include: isAdmin, birthdate, join date, weight, phone, name, email, dietary restrictions, other notes
 // possibly graph for weight, calories

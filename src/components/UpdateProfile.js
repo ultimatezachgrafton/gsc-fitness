@@ -1,12 +1,10 @@
 import React, { useRef, useState } from 'react'
 import { Form, Button, Card, Alert } from 'react-bootstrap'
-import { useAuth } from '../contexts/AuthContext'
 import { Link, useHistory } from 'react-router-dom'
 import { updateUserDataFromProfile } from '../firebase.js'
 
 export default function UpdateProfile() {
     const phoneRef = useRef();
-    const currentUser = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const history = useHistory();

@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react'
-import { Form, Button, Card, Alert } from 'react-bootstrap'
-import { useAuth } from '../contexts/AuthContext'
-import { Link, useHistory } from 'react-router-dom'
-import { updateUserDataFromSignUp } from '../firebase.js'
+import React, { useRef, useState } from 'react';
+import { Form, Button, Card, Alert } from 'react-bootstrap';
+import { useAuth } from '../contexts/AuthContext';
+import { Link, useHistory } from 'react-router-dom';
+import { updateUserDataFromSignUp } from '../firebase.js';
 
 export default function SignUp() {
     const nameRef = useRef();
@@ -25,7 +25,7 @@ export default function SignUp() {
             setError('');
             setLoading(true);
             
-            // check if email already exists, then
+            // Check if email already exists.
             await signup(emailRef.current.value, passwordRef.current.value);
             
             await updateUserDataFromSignUp(nameRef.current.value, phoneRef.current.value, emailRef.current.value);
