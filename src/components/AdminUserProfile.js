@@ -26,28 +26,34 @@ export default class AdminUserProfile extends Component {
     render() {
         return (
             <div>
-                {this.state.client}
+                {this.state.client.lastName}, {this.state.client.firstName}
                 <strong>Email: </strong> email <br />
                 <strong>Phone: </strong> phone <br />
+                <strong>Birthdate: </strong> birthdate <br />
+                <strong>Joined: </strong> joinDate <br />
 
-                Here is your Workout Profile
-                Here is your Nutrition Profile
-
-                <Link to="/workout-history" className="btn btn-primary w-100 mt-3">
-                    <strong> Workout History</strong>
+                <Link to="/update-profile" className="btn btn-primary w-30 mt-3">
+                    <strong>Update {this.state.client}'s Profile</strong>
                 </Link>
 
-                <Link to="/nutrition-plan" className="btn btn-primary w-100 mt-3">
-                    <strong> Nutrition History</strong>
+                <strong>Current weight: </strong> currentWeight <br />
+                <strong>Notes: </strong> notes <br />
+
+               <strong>Current Workout Plan: </strong> currentWorkoutPlan <br/>
+                Update Workout Button
+
+                <Link to="/workout-history" className="btn btn-primary w-30 mt-3">
+                    <strong> {this.state.client}'s Workout History</strong>
                 </Link>
 
-                <Link to="/email-ben" className="btn btn-primary w-100 mt-3">
-                    <strong>Email Ben</strong>
+                <strong>Current Nutrition Plan: </strong> currentNutritionPlan <br />
+                Update Nutrition Button
+
+                <Link to="/nutrition-plan" className="btn btn-primary w-30 mt-3">
+                    <strong> {this.state.client}'s Nutrition History</strong>
                 </Link>
 
-                <Link to="/update-profile" className="btn btn-primary w-100 mt-3">
-                    <strong>Update Profile</strong>
-                </Link>
+                Graph
             </div>
         )
     }

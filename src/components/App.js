@@ -39,11 +39,17 @@ class App extends Component {
 export default App;
 
 // Next step:
-// add to list the links for Ben to add Nutrition and Workout google docs to clients' dashboards
-// create user dashboards list for users to view and select docs to view and update
-// {/* header w/ ben info, social media */}
+// issue: logout makes it so next input does not work; takes two tries to login
+//      if left logged in, going to login lets you go to anyone's profile once you enter the input
+//      login screen needs to be inaccessile if user is logged in
+//      
+// memory leak, learn cleanup
 
 // tomorrow:
-// Design profiles
-// user profiles should include: isAdmin, birthdate, join date, weight, phone, name, email, dietary restrictions, other notes
-// possibly graph for weight, calories
+// Implement profile functionality:
+//      1. fb fill out info on dashboard/profile
+//      2. fb accept new updates from ben
+//      3. messaging between ben/user
+//      4. graph if reasonable
+// CSS
+// Add header w/ ben info, social media

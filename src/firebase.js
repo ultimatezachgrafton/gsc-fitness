@@ -37,9 +37,31 @@ export async function searchUserDatabase() {
             console.log(doc.id, " => ", doc.data());
             users.push(doc.data());
         });
+    }).catch((error) => {
+        console.log("Error getting document:", error);
     });
     console.log(users);
     return users;
+}
+
+export async function checkAdminStatus(emailRef) {
+    let status = false;
+
+    if (emailRef !== null) {
+        await colRef.doc(emailRef).get().then((doc) => {
+            if (doc.exists) {
+                console.log("Document data:", doc.data().isAdmin);
+                status = doc.data().isAdmin;
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+    }
+
+    return status;
 }
 
 // Initially adds user's doc to that collection
@@ -54,8 +76,6 @@ export async function updateUserDataFromSignUp(nameRef, phoneRef, emailRef) {
     }).catch(function (error) {
         console.log("error");
     });
-
-    // ben is emailed
 }
 
 // Updates an existing user's data
@@ -69,24 +89,6 @@ export async function updateUserDataFromProfile(phoneRef) {
             console.log("saved");
         }).catch(function (error) {
             console.log("error");
-        });
-    }
-}
-
-export async function checkAdminStatus(emailRef) {
-    if (emailRef !== null) {
-        console.log(emailRef);
-
-        await colRef.doc(emailRef).get().then((doc) => {
-            if (doc.exists) {
-                console.log("Document data:", doc.data().isAdmin);
-                return doc.data().isAdmin;
-            } else {
-                // doc.data() will be undefined in this case
-                console.log("No such document!");
-            }
-        }).catch((error) => {
-            console.log("Error getting document:", error);
         });
     }
 }

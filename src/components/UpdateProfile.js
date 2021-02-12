@@ -41,6 +41,7 @@ export default function UpdateProfile() {
                             <Form.Label>Phone</Form.Label>
                             <Form.Control type="phone" ref={phoneRef}>
                             </Form.Control>
+                            {/* isAdmin */}
                         </Form.Group>
                         <Button disabled={loading} type="submit">Update</Button>
                     </Form>

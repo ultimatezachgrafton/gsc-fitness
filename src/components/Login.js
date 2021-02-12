@@ -8,35 +8,32 @@ export default function Login() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const { login } = useAuth();
-    const [status, setStatus] = useState(false);
+    const [status, setStatus] = useState();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const history = useHistory();
 
     useEffect(() => {
-        handleSubmit()
-    }, [handleSubmit]);
+        if (status === true || status === false) {
+            if (status === true) {
+                history.push('/');
+            } else {
+                const url = "/users/" + emailRef.current.value;
+                history.push(url);
+            }
+            console.log(status);
+        }
+    }, [status, login, history]);
 
     async function handleSubmit(e) {
         e.preventDefault();
-        console.log("handle")
-
-
+        setLoading(true);
 
         try {
             setError('');
-            setLoading(true);
-
-
-            setStatus(checkAdminStatus(emailRef.current.value));
-            console.log(checkAdminStatus(emailRef.current.value));
-            // await login(emailRef.current.value, passwordRef.current.value);
-
-            // if (status) {
-            // history.push('/');
-            // } else {
-            // history.push(`users/${emailRef}`)
-            // }
+            const s = await checkAdminStatus(emailRef.current.value);
+            await setStatus(s);
+            await login(emailRef.current.value, passwordRef.current.value);
         } catch {
             setError('Failed to log in');
         };

@@ -92,27 +92,26 @@ export default class AdminUserList extends Component {
         this.setState({ loading: false });
     }
 
-
     render() {
         return (
             <div>
-                
-                    <Form inline>
-                        <Form.Control type="text" className="w-25" defaultValue={this.state.userSearchValue}
-                            onChange={this.handleChange} placeholder="Enter user's name or email" />
-                        <Button type="submit" onClick={this.searchUser} className="mb-2">
-                            <strong>Find User</strong>
-                        </Button>
-                    </Form>
-                    <div id="user-table">
-                        {(this.state.loading) ? "... loading ..." : this.state.usersDisplayed.length > 0 ?
-                            <AdminUserTable
-                                key={this.state.usersDisplayed}
-                                users={this.state.usersDisplayed}
-                            />
-                            : "Cannot find this user."}
-                    </div>
-                
+
+                <Form inline>
+                    <Form.Control type="text" className="w-25" defaultValue={this.state.userSearchValue}
+                        onChange={this.handleChange} placeholder="Enter user's name or email" />
+                    <Button type="submit" onClick={this.searchUser} className="mb-2">
+                        <strong>Find User</strong>
+                    </Button>
+                </Form>
+                <div id="user-table">
+                    {(this.state.loading) ? "... loading ..." : this.state.usersDisplayed.length > 0 ?
+                        <AdminUserTable
+                            key={this.state.usersDisplayed}
+                            users={this.state.usersDisplayed}
+                        />
+                        : "Cannot find this user."}
+                </div>
+
                 <Pagination loadUserPages={this.loadUserPages} users={this.state.usersFromDatabase} maxPerPage={this.state.maxPerPage} />
             </div >
         )
