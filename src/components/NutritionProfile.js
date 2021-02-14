@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
 
-export default class NutritionProfile extends Component {
+export default function NutritionProfile() {
+
+    useEffect(() => {
+        // if currentUser matches the url, render
+    });
+
     render() {
         return (
             <div>

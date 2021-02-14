@@ -112,7 +112,8 @@ export default class AdminUserList extends Component {
                         : "Cannot find this user."}
                 </div>
 
-                <Pagination loadUserPages={this.loadUserPages} users={this.state.usersFromDatabase} maxPerPage={this.state.maxPerPage} />
+                <Pagination loadUserPages={this.loadUserPages} users={this.state.usersFromDatabase} 
+                    maxPerPage={this.state.maxPerPage} />
             </div >
         )
     }

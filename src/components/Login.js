@@ -7,23 +7,40 @@ import { checkAdminStatus } from '../firebase';
 export default function Login() {
     const emailRef = useRef();
     const passwordRef = useRef();
-    const { login } = useAuth();
-    const [status, setStatus] = useState();
+    const { login, retrieveCurrentUser, currentUser } = useAuth();
+    const [adminStatus, setAdminStatus] = useState();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const history = useHistory();
 
     useEffect(() => {
-        if (status === true || status === false) {
-            if (status === true) {
-                history.push('/');
-            } else {
-                const url = "/users/" + emailRef.current.value;
-                history.push(url);
+
+        console.log("Render")
+
+        const checkIfLoggedIn = async () => {
+            if (currentUser !== null) {
+                const s = await checkAdminStatus(currentUser.email);
+                await setAdminStatus(s);
             }
-            console.log(status);
         }
-    }, [status, login, history]);
+
+        const handleLogin = async () => {
+            if ((currentUser !== null) && (adminStatus === true || adminStatus === false)) {
+                console.log(currentUser.email)
+                if (adminStatus === true) {
+                    const url = "/admin/" + currentUser.email;
+                    history.push(url);
+                } else if (adminStatus === false) {
+                    console.log(emailRef.current.value)
+                    const url = "/users/" + currentUser.email;
+                    history.push(url);
+                }
+            }
+        }
+
+        checkIfLoggedIn();
+        handleLogin();
+    }, [currentUser, adminStatus, login, history, retrieveCurrentUser]);
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -32,7 +49,7 @@ export default function Login() {
         try {
             setError('');
             const s = await checkAdminStatus(emailRef.current.value);
-            await setStatus(s);
+            await setAdminStatus(s);
             await login(emailRef.current.value, passwordRef.current.value);
         } catch {
             setError('Failed to log in');

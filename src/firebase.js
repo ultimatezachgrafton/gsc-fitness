@@ -18,7 +18,9 @@ const user = app.auth().currentUser;
 const colRef = db.collection("users");
 
 export async function getCurrentUserEmail() {
+    console.log("get current")
     if (user !== null) {
+        console.log(user + user.email)
         return user.email;
     }
 }

@@ -20,10 +20,10 @@ class App extends Component {
                     <Router>
                         <AuthProvider>
                             <Switch>
-                                <PrivateRoute exact path="/" component={AdminDashboard} />
+                                <Route exact path="/" component={Login} />
                                 <Route path="/sign-up" component={SignUp} />
-                                <Route path="/login" component={Login} />
                                 <Route path="/change-password" component={ChangePassword} />
+                                <PrivateRoute path="/admin" component={AdminDashboard} />
                                 <PrivateRoute path="/update-profile" component={UpdateProfile} />
                                 <PrivateRoute path="/:handle" component={AdminUserProfile} />
                                 <PrivateRoute path="/:handle" component={UserDashboard} />
@@ -39,11 +39,7 @@ class App extends Component {
 export default App;
 
 // Next step:
-// issue: logout makes it so next input does not work; takes two tries to login
-//      if left logged in, going to login lets you go to anyone's profile once you enter the input
-//      login screen needs to be inaccessile if user is logged in
-//      
-// memory leak, learn cleanup
+// issue: add authenticate process to each page before it loads
 
 // tomorrow:
 // Implement profile functionality:
@@ -53,3 +49,7 @@ export default App;
 //      4. graph if reasonable
 // CSS
 // Add header w/ ben info, social media
+
+// QUESTIONS:
+// how do I better implement the login + auth system so it sends to the correct urls (not "/login"), 
+//      and doesn't mess up if back button hit twice quickly

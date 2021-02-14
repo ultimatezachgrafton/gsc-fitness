@@ -10,6 +10,10 @@ export default function ChangePassword() {
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        // if currentUser matches the url, render
+    });
+
     async function handleSubmit(e) {
         e.preventDefault();
 

@@ -1,60 +1,82 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Form, Alert, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { useHistory } from 'react-router-dom';
+import AdminUserList from './AdminUserList';
+import "../css/Dashboard.css";
 
-export default class AdminUserProfile extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            client: '',
-            loading: false
-        }
-        this.getClient = this.getClient.bind(this);
-    }
+export default function AdminUserProfile(props) {
 
-    componentDidMount = async () => {
-        await this.getClient();
-    }
+    const [ error, setError ] = useState("");
+    const { currentUser, logout } = useAuth();
+    const [ client, setClient ] = useState(null);
+    const [ loading, setLoading ] = useState(false);
+    const history = useHistory();
 
-    async getClient() {
-        this.setState({ loading: true })
-        let pathname = this.props.location.pathname.substr(1);
+    useEffect(() => {
+        // if currentUser matches the url
+        getClient();
+    });
+
+    async function getClient() {
+        setLoading(true);
+        let pathname = props.location.pathname.substr(1);
         console.log(pathname);
         let userName = pathname.split("/");
-        this.setState({ client: userName[1], loading: false })
+        if (userName !== null) {
+            setClient(userName[1]);
+            setLoading(false);
+        } else {
+            this.handleLogout();
+            console.log("logout")
+        }
     }
 
-    render() {
-        return (
-            <div>
-                {this.state.client.lastName}, {this.state.client.firstName}
-                <strong>Email: </strong> email <br />
-                <strong>Phone: </strong> phone <br />
-                <strong>Birthdate: </strong> birthdate <br />
-                <strong>Joined: </strong> joinDate <br />
+    async function handleLogout() {
+        // setError('');
+        try {
+            await logout();
+            history.push("/");
+        } catch {
+            setError('Failed to log out');
+        }
+    }
 
-                <Link to="/update-profile" className="btn btn-primary w-30 mt-3">
-                    <strong>Update {this.state.client}'s Profile</strong>
-                </Link>
 
-                <strong>Current weight: </strong> currentWeight <br />
-                <strong>Notes: </strong> notes <br />
+    return (
+        <div>
+            {/* {this.state.client.lastName}, {this.state.client.firstName} */}
+            <strong>Email: </strong> email <br />
+            <strong>Phone: </strong> phone <br />
+            <strong>Birthdate: </strong> birthdate <br />
+            <strong>Joined: </strong> joinDate <br />
 
-               <strong>Current Workout Plan: </strong> currentWorkoutPlan <br/>
+            <Link to="/update-profile" className="btn btn-primary w-30 mt-3">
+                <strong>Update {client}'s Profile</strong>
+            </Link>
+
+            <strong>Current weight: </strong> currentWeight <br />
+            <strong>Notes: </strong> notes <br />
+
+            <strong>Current Workout Plan: </strong> currentWorkoutPlan <br />
                 Update Workout Button
 
-                <Link to="/workout-history" className="btn btn-primary w-30 mt-3">
-                    <strong> {this.state.client}'s Workout History</strong>
-                </Link>
+            <Link to="/workout-history" className="btn btn-primary w-30 mt-3">
+                <strong> {client}'s Workout History</strong>
+            </Link>
 
-                <strong>Current Nutrition Plan: </strong> currentNutritionPlan <br />
+            <strong>Current Nutrition Plan: </strong> currentNutritionPlan <br />
                 Update Nutrition Button
 
-                <Link to="/nutrition-plan" className="btn btn-primary w-30 mt-3">
-                    <strong> {this.state.client}'s Nutrition History</strong>
-                </Link>
+            <Link to="/nutrition-plan" className="btn btn-primary w-30 mt-3">
+                <strong> {client}'s Nutrition History</strong>
+            </Link>
 
                 Graph
-            </div>
-        )
-    }
+
+            <Button className="p-0" variant="link" onClick={handleLogout}>Log Out</Button>
+        </div>
+    )
 }
+

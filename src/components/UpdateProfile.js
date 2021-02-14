@@ -9,6 +9,10 @@ export default function UpdateProfile() {
     const [loading, setLoading] = useState(false);
     const history = useHistory();
 
+    useEffect(() => {
+        // if currentUser matches the url, render
+    });
+
     function handleSubmit(e) {
         e.preventDefault();
 
