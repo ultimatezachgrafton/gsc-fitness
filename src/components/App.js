@@ -6,11 +6,12 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import UserDashboard from'./UserDashboard';
 import AdminDashboard from './AdminDashboard';
-import AdminUserProfile from './AdminUserProfile';
+import AdminClientProfile from './AdminClientProfile';
 import SignUp from './SignUp';
 import Login from './Login';
 import ChangePassword from './ChangePassword';
 import UpdateProfile from './UpdateProfile';
+import AdminClientHistory from './AdminClientHistory';
 
 class App extends Component {
     render() {
@@ -23,10 +24,11 @@ class App extends Component {
                                 <Route exact path="/" component={Login} />
                                 <Route path="/sign-up" component={SignUp} />
                                 <Route path="/change-password" component={ChangePassword} />
-                                <PrivateRoute path="/admin" component={AdminDashboard} />
-                                <PrivateRoute path="/update-profile" component={UpdateProfile} />
-                                <PrivateRoute path="/:handle" component={AdminUserProfile} />
-                                <PrivateRoute path="/:handle" component={UserDashboard} />
+                                <PrivateRoute path="/admin/:id" component={AdminDashboard} />
+                                <PrivateRoute path="/user/:id" component={UserDashboard} />
+                                <PrivateRoute path="/admin/client-history/:id" component={AdminClientHistory} />
+                                <PrivateRoute path="/update-profile/:id" component={UpdateProfile} />
+                                <PrivateRoute path="/:handle" component={AdminClientProfile} />
                             </Switch>
                         </AuthProvider>
                     </Router>
@@ -38,18 +40,23 @@ class App extends Component {
 
 export default App;
 
-// Next step:
-// issue: add authenticate process to each page before it loads
-
-// tomorrow:
 // Implement profile functionality:
 //      1. fb fill out info on dashboard/profile
 //      2. fb accept new updates from ben
 //      3. messaging between ben/user
 //      4. graph if reasonable
+//
 // CSS
 // Add header w/ ben info, social media
 
 // QUESTIONS:
-// how do I better implement the login + auth system so it sends to the correct urls (not "/login"), 
-//      and doesn't mess up if back button hit twice quickly
+//      can doublechecking currentUser be put in firebase, etc? 
+//      I've coded it so two quick back-button presses logs out; is there a better way to handle?
+
+// add workout to text area
+// push to firestore
+// retrieved by timestamp
+
+// remember me checkbox
+// Confirm authenticate process works on each page before it loads
+// Confirm history operates correctly (user-profiles might be wonky)

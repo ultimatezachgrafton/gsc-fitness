@@ -10,7 +10,13 @@ export default function AdminUserProfile() {
     const history = useHistory();
 
     useEffect(() => {
-        // if currentUser matches the url, render
+        // if currentUser matches the url
+        const pathname = window.location.pathname;
+        const userName = pathname.split("/");
+        console.log(currentUser.uid);
+        if ((currentUser.email) !== userName[2]) {
+            handleLogout();
+        }
     });
 
     async function getClient() {

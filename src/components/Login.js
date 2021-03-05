@@ -7,7 +7,7 @@ import { checkAdminStatus } from '../firebase';
 export default function Login() {
     const emailRef = useRef();
     const passwordRef = useRef();
-    const { login, retrieveCurrentUser, currentUser } = useAuth();
+    const { login, currentUser } = useAuth();
     const [adminStatus, setAdminStatus] = useState();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -15,10 +15,9 @@ export default function Login() {
 
     useEffect(() => {
 
-        console.log("Render")
-
         const checkIfLoggedIn = async () => {
             if (currentUser !== null) {
+                console.log("checking is logged in")
                 const s = await checkAdminStatus(currentUser.email);
                 await setAdminStatus(s);
             }
@@ -26,21 +25,20 @@ export default function Login() {
 
         const handleLogin = async () => {
             if ((currentUser !== null) && (adminStatus === true || adminStatus === false)) {
-                console.log(currentUser.email)
+                console.log("handling login")
                 if (adminStatus === true) {
                     const url = "/admin/" + currentUser.email;
                     history.push(url);
                 } else if (adminStatus === false) {
-                    console.log(emailRef.current.value)
                     const url = "/users/" + currentUser.email;
                     history.push(url);
                 }
             }
         }
-
+        console.log("user: " + currentUser);
         checkIfLoggedIn();
         handleLogin();
-    }, [currentUser, adminStatus, login, history, retrieveCurrentUser]);
+    }, [currentUser, adminStatus, login, history]);
 
     async function handleSubmit(e) {
         e.preventDefault();

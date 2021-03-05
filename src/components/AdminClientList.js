@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { searchUserDatabase } from '../firebase.js';
-import AdminUserTable from './AdminUserTable.js';
+import AdminUserTable from './AdminClientTable.js';
 import Pagination from './Pagination.js';
 import '../css/AdminUserList.css';
 
-export default class AdminUserList extends Component {
+export default class AdminClientList extends Component {
     constructor(props) {
         super(props);
         this.state = {

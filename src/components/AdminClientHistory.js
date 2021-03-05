@@ -5,11 +5,15 @@ import { useHistory } from 'react-router-dom';
 import AdminUserList from './AdminClientList';
 import "../css/Dashboard.css";
 
-export default function AdminDashboard() {
+export default function AdminClientHistory(props) {
 
     const [error, setError] = useState("");
     const { currentUser, logout } = useAuth();
     const history = useHistory();
+
+    useEffect(() => 
+        console.log("Client history")
+    );
 
     async function handleLogout() {
         setError('');
@@ -25,11 +29,10 @@ export default function AdminDashboard() {
     return (
         <div>
             <Form id="dashboard-form" className="mt-5">
-                <h2 className="mb-4">Welcome, {currentUser.firstName} {currentUser.lastName}!</h2>
+                <h2 className="mb-4">History for {currentUser.firstName} {currentUser.lastName}!</h2>
                 {error && <Alert variant="danger">{error}</Alert>}
             </Form>
-
-            <div> <AdminUserList /> </div>
+            Client History
             <Button className="p-0" variant="link" onClick={handleLogout}>Log Out</Button>
         </div>
     )

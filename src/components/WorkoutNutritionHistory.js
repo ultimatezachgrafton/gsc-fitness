@@ -1,10 +1,6 @@
 import React, { Component } from 'react'
 
 export default class WorkoutNutritionHistory extends Component {
-    
-    useEffect(() => {
-        // if currentUser matches the url, render
-    });
 
     render() {
         return (

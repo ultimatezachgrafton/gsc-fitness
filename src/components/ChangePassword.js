@@ -1,17 +1,25 @@
-import React, { useRef, useState } from "react"
-import { Form, Button, Card, Alert } from "react-bootstrap"
-import { useAuth } from "../contexts/AuthContext"
-import { Link } from "react-router-dom"
+import React, { useRef, useState, useEffect } from "react";
+import { Form, Button, Card, Alert } from "react-bootstrap";
+import { useAuth } from "../contexts/AuthContext";
+import { Link } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 
 export default function ChangePassword() {
     const emailRef = useRef();
-    const { resetPassword } = useAuth();
+    const { currentUser, resetPassword, logout } = useAuth();
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
+    const history = useHistory();
 
     useEffect(() => {
-        // if currentUser matches the url, render
+        // if currentUser matches the url
+        const pathname = window.location.pathname;
+        const userName = pathname.split("/");
+        console.log(currentUser.uid);
+        if ((currentUser.email) !== userName[2]) {
+            handleLogout();
+        }
     });
 
     async function handleSubmit(e) {
@@ -30,6 +38,16 @@ export default function ChangePassword() {
 
             setLoading(false);
       }
+
+      async function handleLogout() {
+        setError('');
+        try {
+            await logout();
+            history.push("/");
+        } catch {
+            setError('Failed to log out');
+        }
+    }
 
     return (
         <>
