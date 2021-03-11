@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Alert, Button } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import { useHistory } from 'react-router-dom';
-import AdminUserList from './AdminClientList';
+import ClientList from './ClientList';
 import "../css/Dashboard.css";
 
 export default function AdminDashboard() {
@@ -29,7 +29,7 @@ export default function AdminDashboard() {
                 {error && <Alert variant="danger">{error}</Alert>}
             </Form>
 
-            <div> <AdminUserList /> </div>
+            <div> <ClientList /> </div>
             <Button className="p-0" variant="link" onClick={handleLogout}>Log Out</Button>
         </div>
     )

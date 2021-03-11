@@ -1,16 +1,22 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
-function UserTable(props) {
+function ClientTable(props) {
     let tableRows = [];
 
     for (let i = 0; i < props.users.length; i++) {
         let user = props.users[i];
         tableRows.push(<tr key={user.email}>
-            <td><a href={`/admin/user-profiles/${user.email}`}> {user.lastName}, {user.firstName}</a> </td>
-            <td><a href={`/admin/user-profiles/${user.email}`}>{user.email}</a></td>
+            <td><Link to={{
+                pathname: `/client/${user.email}`,
+                state: { email: user.email }
+            }} >
+                {user.lastName}, {user.firstName}
+            </Link> </td>
+            < td > <a href={`/client/${user.email}`}>{user.email}</a></td >
             <td>{user.phone}</td>
-        </tr>);
+        </tr >);
     }
 
     return (
@@ -29,4 +35,4 @@ function UserTable(props) {
     )
 }
 
-export default UserTable;
+export default ClientTable;

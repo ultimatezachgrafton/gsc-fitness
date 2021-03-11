@@ -18,41 +18,82 @@ const user = app.auth().currentUser;
 const colRef = db.collection("users");
 
 export async function getCurrentUserEmail() {
-    console.log("get current")
     if (user !== null) {
         console.log(user + user.email)
         return user.email;
     }
 }
 
+// Find matching emailRef
 export async function getUserData(emailRef) {
-    // find database matching emailRef
-    if (user !== null) {
-        return user.displayName;
+    let data;
+    if (emailRef !== null) {
+        const docRef = db.collection("users").doc(emailRef);
+        await docRef.get().then((doc) => {
+            if (doc.exists) {
+                data = doc.data();
+            } else {
+                console.log("No such document!");
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
     }
+    return data;
 }
 
 export async function searchUserDatabase() {
     const users = [];
     await colRef.get().then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-            console.log(doc.id, " => ", doc.data());
+            // console.log(doc.id, " => ", doc.data());
             users.push(doc.data());
         });
     }).catch((error) => {
         console.log("Error getting document:", error);
     });
-    console.log(users);
     return users;
 }
 
+export async function searchWorkoutDatabase(emailRef) {
+    let workouts = [];
+    if (emailRef !== null) {
+        // fetch data
+        await colRef.doc(emailRef).collection("workouts").orderBy("created").get().then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+                // console.log(doc.id, " => ", doc.data());
+                workouts.push(doc.data());
+            });
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });;
+    }
+    return workouts;
+}
+
+export async function searchNutritionDatabase(emailRef) {
+    let nutrition = [];
+    if (emailRef !== null) {
+        // fetch data
+        await colRef.doc(emailRef).collection("nutrition").orderBy("created").get().then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+                // console.log(doc.id, " => ", doc.data());
+                nutrition.push(doc.data());
+            });
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });;
+    }
+    return nutrition;
+}
+
+// Checks if logged-in user has admin privileges
 export async function checkAdminStatus(emailRef) {
     let status = false;
 
     if (emailRef !== null) {
         await colRef.doc(emailRef).get().then((doc) => {
             if (doc.exists) {
-                console.log("Document data:", doc.data().isAdmin);
                 status = doc.data().isAdmin;
             } else {
                 // doc.data() will be undefined in this case
@@ -64,6 +105,34 @@ export async function checkAdminStatus(emailRef) {
     }
 
     return status;
+}
+
+// Adds workout to client's collection
+export async function addClientWorkoutData(clientEmailRef, textRef) {
+    db.collection("users").doc(clientEmailRef).collection("workouts").add({
+        email: clientEmailRef,
+        text: textRef,
+        created: firebase.firestore.FieldValue.serverTimestamp(),
+        createdString: firebase.firestore.FieldValue.serverTimestamp().toString()
+    }).then(function () {
+        console.log("saved");
+    }).catch(function (error) {
+        console.log("error");
+    });
+}
+
+// Adds nutrition plan to client's collection
+export async function addNutritionPlanData(clientEmailRef, textRef) {
+    db.collection("users").doc(clientEmailRef).collection("nutrition").add({
+        email: clientEmailRef,
+        text: textRef,
+        created: firebase.firestore.FieldValue.serverTimestamp(),
+        createdString: firebase.firestore.FieldValue.serverTimestamp().toString()
+    }).then(function () {
+        console.log("saved");
+    }).catch(function (error) {
+        console.log("error");
+    });
 }
 
 // Initially adds user's doc to that collection

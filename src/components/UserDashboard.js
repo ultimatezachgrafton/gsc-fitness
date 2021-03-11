@@ -43,14 +43,14 @@ export default function AdminUserProfile() {
 
     return (
         <div>
-            {this.state.client.lastName}, {this.state.client.firstName}
+            {/* {this.state.client.lastName}, {this.state.client.firstName} */}
             <strong>Email: </strong> email <br />
             <strong>Phone: </strong> phone <br />
             <strong>Birthdate: </strong> birthdate <br />
             <strong>Joined: </strong> joinDate <br />
 
             <Link to="/update-profile" className="btn btn-primary w-30 mt-3">
-                <strong>Update {this.state.client}'s Profile</strong>
+                <strong>Update Profile</strong>
             </Link>
 
             <strong>Current weight: </strong> currentWeight <br />
@@ -59,15 +59,11 @@ export default function AdminUserProfile() {
             <strong>Current Workout Plan: </strong> currentWorkoutPlan <br />
                 Update Workout Button
 
-            <Link to="/workout-history" className="btn btn-primary w-30 mt-3">
-                <strong> {this.state.client}'s Workout History</strong>
-            </Link>
-
             <strong>Current Nutrition Plan: </strong> currentNutritionPlan <br />
                 Update Nutrition Button
 
-            <Link to="/nutrition-plan" className="btn btn-primary w-30 mt-3">
-                <strong> {this.state.client}'s Nutrition History</strong>
+            <Link to="/user-history" className="btn btn-primary w-30 mt-3">
+                <strong> Workout and Nutrition History</strong>
             </Link>
 
                 Graph

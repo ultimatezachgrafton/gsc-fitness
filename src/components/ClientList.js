@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { searchUserDatabase } from '../firebase.js';
-import AdminUserTable from './AdminClientTable.js';
+import ClientTable from './ClientTable.js';
 import Pagination from './Pagination.js';
 import '../css/AdminUserList.css';
 
-export default class AdminClientList extends Component {
-    constructor(props) {
-        super(props);
+export default class ClientList extends Component {
+    constructor() {
+        super();
         this.state = {
             usersFromDatabase: [],
             usersDisplayed: [],
@@ -95,7 +95,6 @@ export default class AdminClientList extends Component {
     render() {
         return (
             <div>
-
                 <Form inline>
                     <Form.Control type="text" className="w-25" defaultValue={this.state.userSearchValue}
                         onChange={this.handleChange} placeholder="Enter user's name or email" />
@@ -105,14 +104,14 @@ export default class AdminClientList extends Component {
                 </Form>
                 <div id="user-table">
                     {(this.state.loading) ? "... loading ..." : this.state.usersDisplayed.length > 0 ?
-                        <AdminUserTable
+                        <ClientTable
                             key={this.state.usersDisplayed}
                             users={this.state.usersDisplayed}
                         />
                         : "Cannot find this user."}
                 </div>
 
-                <Pagination loadUserPages={this.loadUserPages} users={this.state.usersFromDatabase} 
+                <Pagination loadPages={this.loadUserPages} items={this.state.usersFromDatabase} 
                     maxPerPage={this.state.maxPerPage} />
             </div >
         )
