@@ -5,23 +5,15 @@ import { Link } from 'react-router-dom';
 function WorkoutTable(props) {
     let tableRows = [];
     
-    const handleClick = (event) => {
-        event.preventDefault();
-        props.callback("callback");
-        console.log("callback")
+    const fetchData = (workout) => {
+        props.callback(workout.text);
     }
 
     for (let i = 0; i < props.workouts.length; i++) {
         let workout = props.workouts[i];
-            console.log(workout)
-        tableRows.push(<tr key={workout.created}>
-            <td><Link to={{
-                pathname: `/client/${workout.created}`,
-                state: { text: workout.text }
-            }} >
-                {workout.createdString}
-            </Link> </td>
-            <td onClick={handleClick}>{workout.text}</td>
+        tableRows.push(<tr key={workout.created} onClick={() => fetchData(workout)}>
+            <td> {workout.createdString} </td>
+            <td>{workout.text}</td>
         </tr >);
     }
 

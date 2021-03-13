@@ -14,6 +14,7 @@ import "../css/Dashboard.css";
 export default function AdminClientProfile(props) {
     const workoutRef = useRef();
     const nutritionRef = useRef();
+    const workoutData = null;
     const [error, setError] = useState("");
     const { currentUser, logout } = useAuth();
     const [workoutsFromDatabase, setWorkoutsFromDatabase] = useState(null);
@@ -37,10 +38,12 @@ export default function AdminClientProfile(props) {
     useEffect(() => {
 
         const getClientDataFromDatabase = async () => {
-            if (clientEmail === null) {
+            if (clientEmail === null && !loading) {
                 setLoading(true);
                 if (props.location.state.email !== null) {
                     const data = await getUserData(props.location.state.email);
+                    console.log(data)
+                    
                     setClientEmail(data.email);
                     setClientBirthdate(data.birthDate);
                     setClientDisplayName(data.joinDate);
@@ -53,24 +56,31 @@ export default function AdminClientProfile(props) {
         };
 
         const getInitialWorkoutData = async () => {
-            if (clientEmail !== null && workoutsFromDatabase === null) {
+            if (clientEmail !== null && workoutsFromDatabase === null && !loading) {
                 setLoading(true);
-                const data = await searchWorkoutDatabase(clientEmail).catch(error => "error");
-                setWorkoutsFromDatabase(data);
-                setCurrentWorkout(data[0].text);
-                setWorkoutValue(data[0].text);
+                await setWorkoutsFromDatabase(await searchWorkoutDatabase(clientEmail)).catch(error => "error");
+                // if (data.length > 0) {
+                    // setWorkoutsFromDatabase(data);
+                    console.log(workoutsFromDatabase);
+                    // setCurrentWorkout(data[0].text);
+                    // setWorkoutValue(data[0].text);
+                
                 setLoading(false);
             }
         }
 
         const getInitialNutritionData = async () => {
-            if (clientEmail !== null && nutritionFromDatabase === null) {
+            if (clientEmail !== null && nutritionFromDatabase === null && !loading) {
                 setLoading(true);
                 const data = await searchNutritionDatabase(clientEmail).catch(error => "error");
-                setNutritionFromDatabase(data);
-                setCurrentNutritionPlan(data[0].text);
-                setNutritionValue(data[0].text);
+                if (data.length > 0) {
+                    console.log(data)
+                    setNutritionFromDatabase(data);
+                    setCurrentNutritionPlan(data[0].text);
+                    setNutritionValue(data[0].text);
+                }
                 setLoading(false);
+
             }
         }
 
@@ -78,7 +88,13 @@ export default function AdminClientProfile(props) {
         getInitialWorkoutData();
         getInitialNutritionData();
     }, [clientEmail, props, workoutsFromDatabase, nutritionFromDatabase,
-        currentWorkout, currentNutritionPlan, workoutValue, nutritionValue]);
+        currentWorkout, currentNutritionPlan, workoutValue, nutritionValue, loading]);
+
+    const setInitialWorkoutData = () =>  {
+        // setWorkoutsFromDatabase(data);
+        // setCurrentWorkout(data[0].text);
+        // setWorkoutValue(data[0].text);
+    }
 
     // utilize getUserData and populate profile with said data
 
@@ -114,8 +130,9 @@ export default function AdminClientProfile(props) {
         setNutritionValue(e.target.value);
     };
 
-    const handleCallback = () => {
-        console.log("callback")
+    const handleCallback = (callbackData) => {
+        console.log("callback" + callbackData);
+        setWorkoutValue(callbackData);
     }
 
     async function handleLogout() {
@@ -157,7 +174,7 @@ export default function AdminClientProfile(props) {
                     </Button>
                 </div> <br />
 
-                {workoutsVisible ?
+                {workoutsVisible && workoutsFromDatabase !== null ?
                     <div className="div-wlist">
                         {loading ? "...loading..." : workoutsFromDatabase.length > 0 ?
                             <WorkoutHistoryList workouts={workoutsFromDatabase} callback={handleCallback} />
@@ -177,7 +194,7 @@ export default function AdminClientProfile(props) {
                     </Button>
                 </div> <br />
 
-                {nutritionVisible ?
+                {nutritionVisible && nutritionFromDatabase !== null ?
                     <div className="div-nlist">
                         {loading ? "...loading..." : nutritionFromDatabase.length > 0 ?
                             <NutritionHistoryList nutrition={nutritionFromDatabase} />

@@ -40,9 +40,9 @@ class App extends Component {
 export default App;
 
 // Implement profile functionality:
-//      1. ClientProfiles/UserDashboard:
-//          c. cell onclick loads full text to textarea (callbacks are in place)
-//      2. links go to urls that are uids/auto-generated?
+//      1. switch urls to uids instead of emails
+//      2. userdashboard
+//      3. in-app messaging
 //
 // CSS
 // Add header w/ ben info, social media

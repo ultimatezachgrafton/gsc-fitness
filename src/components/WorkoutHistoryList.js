@@ -11,7 +11,8 @@ export default class WorkoutHistoryList extends Component {
             workoutsSearched: [],
             currentWorkout: null, 
             loading: false,
-            workoutSearchValue: ""
+            workoutSearchValue: "",
+            textFieldValue: "",
         }
     }
 
@@ -20,8 +21,9 @@ export default class WorkoutHistoryList extends Component {
         this.setState({ currentWorkout: this.state.workoutsFromDatabase[0].text, loading: false })
     }
 
-    handleCallback = () =>{
-        console.log("callback");
+    handleCallback = (callbackData) => {
+        console.log(callbackData);
+        this.props.callback(callbackData);
     }
 
     render() {
