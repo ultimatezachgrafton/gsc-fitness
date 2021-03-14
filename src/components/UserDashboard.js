@@ -10,6 +10,9 @@ export default function AdminUserProfile() {
     const history = useHistory();
 
     useEffect(() => {
+
+        // fetch user info from db
+
         // if currentUser matches the url
         const pathname = window.location.pathname;
         const userName = pathname.split("/");
@@ -18,18 +21,6 @@ export default function AdminUserProfile() {
             handleLogout();
         }
     });
-
-    async function getClient() {
-        this.setState({ loading: true });
-        let pathname = this.props.location.pathname.substr(1);
-        console.log(pathname);
-        let userName = pathname.split("/");
-        if (userName !== null) {
-            this.setState({ client: userName[1], loading: false });
-        } else {
-            handleLogout();
-        }
-    }
 
     async function handleLogout() {
         setError('');

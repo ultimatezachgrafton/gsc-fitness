@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Route, Redirect, useHistory } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
-
 export default function PrivateRoute({ component: Component, ...rest }) {
     const { currentUser, logout } = useAuth();
     const [error, setError] = useState("");

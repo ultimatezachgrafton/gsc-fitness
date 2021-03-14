@@ -2,20 +2,20 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-function ClientTable(props) {
+function MessageTable(props) {
     let tableRows = [];
 
-    for (let i = 0; i < props.users.length; i++) {
-        let user = props.users[i];
+    for (let i = 0; i < props.messages.length; i++) {
+        const message = props.message[i].text;
+        const user = props.messages[i].user;
         tableRows.push(<tr key={user.email}>
             <td><Link to={{
-                pathname: `/client/profile/${user.uuid}`,
+                pathname: `/client/profile`,
                 state: { email: user.email }
             }} >
                 {user.lastName}, {user.firstName}
             </Link> </td>
-            < td > <a href={`/client/profile/${user.uuid}`}>{user.email}</a></td >
-            <td>{user.phone}</td>
+            < td > <a href={`/client/profile`}>{message}</a></td >
         </tr >);
     }
 
@@ -23,9 +23,8 @@ function ClientTable(props) {
         <Table striped bordered hover variant="dark">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
+                    <th>Sender</th>
+                    <th>Message</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,4 +34,4 @@ function ClientTable(props) {
     )
 }
 
-export default ClientTable;
+export default MessageTable;

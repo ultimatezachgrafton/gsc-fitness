@@ -59,14 +59,15 @@ export async function searchWorkoutDatabase(emailRef) {
     let workouts = [];
     if (emailRef !== null) {
         // fetch data
-        await colRef.doc(emailRef).collection("workouts").orderBy("created").get().then(function (querySnapshot) {
-            querySnapshot.forEach(function (doc) {
-                // console.log(doc.id, " => ", doc.data());
-                workouts.push(doc.data());
-            });
-        }).catch((error) => {
-            console.log("Error getting document:", error);
-        });;
+        await colRef.doc(emailRef).collection("workouts").orderBy("created", "desc").limit(3)
+            .get().then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                    console.log(doc.id, " => ", doc.data());
+                    workouts.push(doc.data());
+                });
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });;
     }
     return workouts;
 }
@@ -75,14 +76,15 @@ export async function searchNutritionDatabase(emailRef) {
     let nutrition = [];
     if (emailRef !== null) {
         // fetch data
-        await colRef.doc(emailRef).collection("nutrition").orderBy("created").get().then(function (querySnapshot) {
-            querySnapshot.forEach(function (doc) {
-                // console.log(doc.id, " => ", doc.data());
-                nutrition.push(doc.data());
-            });
-        }).catch((error) => {
-            console.log("Error getting document:", error);
-        });;
+        await colRef.doc(emailRef).collection("nutrition").orderBy("created", "desc").limit(3)
+            .get().then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                    // console.log(doc.id, " => ", doc.data());
+                    nutrition.push(doc.data());
+                });
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });;
     }
     return nutrition;
 }
@@ -125,6 +127,37 @@ export async function addClientWorkoutData(clientEmailRef, textRef) {
 export async function addNutritionPlanData(clientEmailRef, textRef) {
     db.collection("users").doc(clientEmailRef).collection("nutrition").add({
         email: clientEmailRef,
+        text: textRef,
+        created: firebase.firestore.FieldValue.serverTimestamp(),
+        createdString: firebase.firestore.FieldValue.serverTimestamp().toString()
+    }).then(function () {
+        console.log("saved");
+    }).catch(function (error) {
+        console.log("error");
+    });
+}
+
+export async function searchMessageDatabase(emailRef) {
+    let messages = [];
+    if (emailRef !== null) {
+        // fetch data
+        await colRef.doc(emailRef).collection("messages").orderBy("created", "desc").limit(3)
+            .get().then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                    console.log(doc.id, " => ", doc.data());
+                    messages.push(doc.data());
+                });
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });;
+    }
+    return messages;
+}
+
+// Sends message to admin
+export async function sendMessageToAdmin(emailRef, textRef) {
+    db.colRef.doc(emailRef).collection("messages").add({
+        email: emailRef,
         text: textRef,
         created: firebase.firestore.FieldValue.serverTimestamp(),
         createdString: firebase.firestore.FieldValue.serverTimestamp().toString()

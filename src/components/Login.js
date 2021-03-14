@@ -17,7 +17,6 @@ export default function Login() {
 
         const checkIfLoggedIn = async () => {
             if (currentUser !== null) {
-                console.log("checking is logged in")
                 const s = await checkAdminStatus(currentUser.email);
                 await setAdminStatus(s);
             }
@@ -25,12 +24,11 @@ export default function Login() {
 
         const handleLogin = async () => {
             if ((currentUser !== null) && (adminStatus === true || adminStatus === false)) {
-                console.log("handling login")
                 if (adminStatus === true) {
-                    const url = "/admin/" + currentUser.email;
+                    const url = "/admin/" + currentUser.uid;
                     history.push(url);
                 } else if (adminStatus === false) {
-                    const url = "/users/" + currentUser.email;
+                    const url = "/users/" + currentUser.uid;
                     history.push(url);
                 }
             }

@@ -58,13 +58,13 @@ export default function AdminClientProfile(props) {
         const getInitialWorkoutData = async () => {
             if (clientEmail !== null && workoutsFromDatabase === null && !loading) {
                 setLoading(true);
-                await setWorkoutsFromDatabase(await searchWorkoutDatabase(clientEmail)).catch(error => "error");
-                // if (data.length > 0) {
-                    // setWorkoutsFromDatabase(data);
-                    console.log(workoutsFromDatabase);
-                    // setCurrentWorkout(data[0].text);
-                    // setWorkoutValue(data[0].text);
-                
+                const data = await searchWorkoutDatabase(clientEmail).catch(error => "error");
+                if (data.length > 0) {
+                    console.log(data);
+                    setWorkoutsFromDatabase(data);
+                    setCurrentWorkout(data[0].text);
+                    setWorkoutValue(data[0].text);
+                }
                 setLoading(false);
             }
         }
@@ -74,13 +74,12 @@ export default function AdminClientProfile(props) {
                 setLoading(true);
                 const data = await searchNutritionDatabase(clientEmail).catch(error => "error");
                 if (data.length > 0) {
-                    console.log(data)
+                    console.log(data);
                     setNutritionFromDatabase(data);
                     setCurrentNutritionPlan(data[0].text);
                     setNutritionValue(data[0].text);
                 }
                 setLoading(false);
-
             }
         }
 
@@ -89,12 +88,6 @@ export default function AdminClientProfile(props) {
         getInitialNutritionData();
     }, [clientEmail, props, workoutsFromDatabase, nutritionFromDatabase,
         currentWorkout, currentNutritionPlan, workoutValue, nutritionValue, loading]);
-
-    const setInitialWorkoutData = () =>  {
-        // setWorkoutsFromDatabase(data);
-        // setCurrentWorkout(data[0].text);
-        // setWorkoutValue(data[0].text);
-    }
 
     // utilize getUserData and populate profile with said data
 
@@ -185,7 +178,7 @@ export default function AdminClientProfile(props) {
                 <div className="form-group">
                     <label>Nutrition plan details</label>
                     <textarea className="form-control" id="edit-workout-text" onChange={handleChangeNutrition}
-                        ref={workoutRef} value={nutritionValue} rows="3">
+                        ref={nutritionRef} value={nutritionValue} rows="3">
                     </textarea>
                     <button onClick={deleteNutritionValue} className="btn btn-primary">New Plan</button>
                     <button onClick={addNutritionPlan} className="btn btn-primary">Submit</button>
