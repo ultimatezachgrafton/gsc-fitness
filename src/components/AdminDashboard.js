@@ -3,7 +3,6 @@ import { Form, Alert, Button } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import { useHistory } from 'react-router-dom';
 import ClientList from './ClientList';
-import MessageList from './MessageList';
 import "../css/Dashboard.css";
 
 export default function AdminDashboard() {
@@ -32,8 +31,6 @@ export default function AdminDashboard() {
 
             <div> <ClientList /> </div>
             <Button className="p-0" variant="link" onClick={handleLogout}>Log Out</Button>
-
-            <div> <MessageList /> </div>
         </div>
     )
 }

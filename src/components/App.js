@@ -40,9 +40,8 @@ class App extends Component {
 export default App;
 
 // Implement profile functionality:
-//      2. in-app messaging - Ben sees table of questions
-//      1. userdashboard
-//      3. incorporate uuids, short-uuids generated at registration
+//      5. inbox
+//      6. "object object" issue w createdString
 //
 // CSS
 // Add header w/ ben info, social media

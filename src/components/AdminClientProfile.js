@@ -7,16 +7,14 @@ import {
     getUserData, addClientWorkoutData, addNutritionPlanData,
     searchWorkoutDatabase, searchNutritionDatabase
 } from '../firebase.js';
-import NutritionHistoryList from './NutritionHistoryList';
-import WorkoutHistoryList from './WorkoutHistoryList';
+import HistoryList from './HistoryList';
 import "../css/Dashboard.css";
 
 export default function AdminClientProfile(props) {
     const workoutRef = useRef();
     const nutritionRef = useRef();
-    const workoutData = null;
-    const [error, setError] = useState("");
     const { currentUser, logout } = useAuth();
+    const [error, setError] = useState("");
     const [workoutsFromDatabase, setWorkoutsFromDatabase] = useState(null);
     const [nutritionFromDatabase, setNutritionFromDatabase] = useState(null);
     const [currentWorkout, setCurrentWorkout] = useState();
@@ -48,8 +46,6 @@ export default function AdminClientProfile(props) {
                     setClientBirthdate(data.birthDate);
                     setClientDisplayName(data.joinDate);
                     setClientPhone(data.phone);
-                } else {
-                    this.handleLogout();
                 }
                 setLoading(false);
             }
@@ -67,7 +63,7 @@ export default function AdminClientProfile(props) {
                 }
                 setLoading(false);
             }
-        }
+        };
 
         const getInitialNutritionData = async () => {
             if (clientEmail !== null && nutritionFromDatabase === null && !loading) {
@@ -81,13 +77,13 @@ export default function AdminClientProfile(props) {
                 }
                 setLoading(false);
             }
-        }
+        };
 
         getClientDataFromDatabase();
         getInitialWorkoutData();
         getInitialNutritionData();
-    }, [clientEmail, props, workoutsFromDatabase, nutritionFromDatabase,
-        currentWorkout, currentNutritionPlan, workoutValue, nutritionValue, loading]);
+    }, [clientEmail, props, workoutsFromDatabase, nutritionFromDatabase, currentWorkout, 
+        currentNutritionPlan, workoutValue, nutritionValue, loading]);
 
     // utilize getUserData and populate profile with said data
 
@@ -124,11 +120,10 @@ export default function AdminClientProfile(props) {
     };
 
     const handleCallback = (callbackData) => {
-        console.log("callback" + callbackData);
         setWorkoutValue(callbackData);
     }
 
-    async function handleLogout() {
+    const handleLogout = async () => {
         // setError('');
         try {
             await logout();
@@ -170,7 +165,7 @@ export default function AdminClientProfile(props) {
                 {workoutsVisible && workoutsFromDatabase !== null ?
                     <div className="div-wlist">
                         {loading ? "...loading..." : workoutsFromDatabase.length > 0 ?
-                            <WorkoutHistoryList workouts={workoutsFromDatabase} callback={handleCallback} />
+                            <HistoryList items={workoutsFromDatabase} callback={handleCallback} />
                             : "No workout history yet!"}
                     </div> : null
                 }
@@ -190,7 +185,7 @@ export default function AdminClientProfile(props) {
                 {nutritionVisible && nutritionFromDatabase !== null ?
                     <div className="div-nlist">
                         {loading ? "...loading..." : nutritionFromDatabase.length > 0 ?
-                            <NutritionHistoryList nutrition={nutritionFromDatabase} />
+                            <HistoryList items={nutritionFromDatabase} />
                             : "No nutrition plans yet!"}
                     </div> : null
                 }

@@ -51,7 +51,6 @@ export default class ClientList extends Component {
                 currentPage.push(this.state.usersFromDatabase[i]);
                 this.setState({ usersDisplayed: currentPage, loading: false });
             };
-            ;
         };
     }
 

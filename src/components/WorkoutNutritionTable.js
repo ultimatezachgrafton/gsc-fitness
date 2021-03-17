@@ -2,18 +2,18 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-function WorkoutTable(props) {
+function WorkoutNutritionTable(props) {
     let tableRows = [];
     
-    const fetchData = (workout) => {
-        props.callback(workout.text);
+    const fetchData = (item) => {
+        props.callback(item.text);
     }
 
-    for (let i = 0; i < props.workouts.length; i++) {
-        let workout = props.workouts[i];
-        tableRows.push(<tr key={workout.created} onClick={() => fetchData(workout)}>
-            <td> {workout.createdString} </td>
-            <td>{workout.text}</td>
+    for (let i = 0; i < props.items.length; i++) {
+        let item = props.items[i];
+        tableRows.push(<tr key={item.created} onClick={() => fetchData(item)}>
+            <td> {item.createdString} </td>
+            <td>{item.text}</td>
         </tr >);
     }
 
@@ -32,4 +32,4 @@ function WorkoutTable(props) {
     )
 }
 
-export default WorkoutTable;
+export default WorkoutNutritionTable;

@@ -1,6 +1,14 @@
 import React, { Component } from 'react'
 
 export class Pagination extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            items: this.props.items,
+            loading: false,
+        }
+    }
+
     render() {
         const buttons = [];
         let paginate = null;

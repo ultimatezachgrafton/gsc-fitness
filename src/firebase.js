@@ -28,8 +28,7 @@ export async function getCurrentUserEmail() {
 export async function getUserData(emailRef) {
     let data;
     if (emailRef !== null) {
-        const docRef = db.collection("users").doc(emailRef);
-        await docRef.get().then((doc) => {
+        await db.collection("users").doc(emailRef).get().then((doc) => {
             if (doc.exists) {
                 data = doc.data();
             } else {
@@ -46,7 +45,7 @@ export async function searchUserDatabase() {
     const users = [];
     await colRef.get().then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-            // console.log(doc.id, " => ", doc.data());
+            console.log(doc.id, " => ", doc.data());
             users.push(doc.data());
         });
     }).catch((error) => {
@@ -56,7 +55,7 @@ export async function searchUserDatabase() {
 }
 
 export async function searchWorkoutDatabase(emailRef) {
-    let workouts = [];
+    const workouts = [];
     if (emailRef !== null) {
         // fetch data
         await colRef.doc(emailRef).collection("workouts").orderBy("created", "desc").limit(3)
@@ -70,43 +69,6 @@ export async function searchWorkoutDatabase(emailRef) {
             });;
     }
     return workouts;
-}
-
-export async function searchNutritionDatabase(emailRef) {
-    let nutrition = [];
-    if (emailRef !== null) {
-        // fetch data
-        await colRef.doc(emailRef).collection("nutrition").orderBy("created", "desc").limit(3)
-            .get().then(function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                    // console.log(doc.id, " => ", doc.data());
-                    nutrition.push(doc.data());
-                });
-            }).catch((error) => {
-                console.log("Error getting document:", error);
-            });;
-    }
-    return nutrition;
-}
-
-// Checks if logged-in user has admin privileges
-export async function checkAdminStatus(emailRef) {
-    let status = false;
-
-    if (emailRef !== null) {
-        await colRef.doc(emailRef).get().then((doc) => {
-            if (doc.exists) {
-                status = doc.data().isAdmin;
-            } else {
-                // doc.data() will be undefined in this case
-                console.log("No such document!");
-            }
-        }).catch((error) => {
-            console.log("Error getting document:", error);
-        });
-    }
-
-    return status;
 }
 
 // Adds workout to client's collection
@@ -123,9 +85,27 @@ export async function addClientWorkoutData(clientEmailRef, textRef) {
     });
 }
 
+export async function searchNutritionDatabase(emailRef) {
+    const nutrition = [];
+    console.log(emailRef)
+    if (emailRef !== null) {
+        // fetch data
+        await colRef.doc(emailRef).collection("nutrition").orderBy("created", "desc").limit(3)
+            .get().then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                    console.log(doc.id, " => ", doc.data());
+                    nutrition.push(doc.data());
+                });
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });;
+    }
+    return nutrition;
+}
+
 // Adds nutrition plan to client's collection
 export async function addNutritionPlanData(clientEmailRef, textRef) {
-    db.collection("users").doc(clientEmailRef).collection("nutrition").add({
+    colRef.doc(clientEmailRef).collection("nutrition").add({
         email: clientEmailRef,
         text: textRef,
         created: firebase.firestore.FieldValue.serverTimestamp(),
@@ -138,29 +118,39 @@ export async function addNutritionPlanData(clientEmailRef, textRef) {
 }
 
 export async function searchMessageDatabase(emailRef) {
-    let messages = [];
-    if (emailRef !== null) {
-        // fetch data
-        await colRef.doc(emailRef).collection("messages").orderBy("created", "desc").limit(3)
-            .get().then(function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                    console.log(doc.id, " => ", doc.data());
-                    messages.push(doc.data());
-                });
-            }).catch((error) => {
-                console.log("Error getting document:", error);
-            });;
-    }
+    const messages = [];
+    // fetch data
+    await colRef.doc(emailRef).collection("messages").orderBy("created", "desc")
+        .get().then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+                console.log(doc.id, " => ", doc.data());
+                messages.push(doc.data());
+            });
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
     return messages;
 }
 
-// Sends message to admin
-export async function sendMessageToAdmin(emailRef, textRef) {
-    db.colRef.doc(emailRef).collection("messages").add({
-        email: emailRef,
+// Sends message to recipient
+export function sendMessageFromInbox(emailRef, recipientRef, textRef) {
+    colRef.doc(recipientRef).collection("messages").add({
+        senderEmail: emailRef,
         text: textRef,
         created: firebase.firestore.FieldValue.serverTimestamp(),
-        createdString: firebase.firestore.FieldValue.serverTimestamp().toString()
+        createdString: firebase.firestore.FieldValue.serverTimestamp().toString(),
+        isUnread: true
+    }).then(function () {
+        console.log("saved");
+    }).catch(function (error) {
+        console.log("error");
+    });
+}
+
+// Updates isUnread field
+export function updateIsUnread(recipientRef) {
+    colRef.doc(recipientRef).collection("messages").add({
+        isUnread: false
     }).then(function () {
         console.log("saved");
     }).catch(function (error) {
@@ -195,6 +185,26 @@ export async function updateUserDataFromProfile(phoneRef) {
             console.log("error");
         });
     }
+}
+
+// Checks if logged-in user has admin privileges
+export async function checkAdminStatus(emailRef) {
+    let status = false;
+
+    if (emailRef !== null) {
+        await colRef.doc(emailRef).get().then((doc) => {
+            if (doc.exists) {
+                status = doc.data().isAdmin;
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+    }
+
+    return status;
 }
 
 export const auth = app.auth();
