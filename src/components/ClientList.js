@@ -66,7 +66,7 @@ export default class ClientList extends Component {
         }
     };
 
-    searchUser = async (event) => {
+    searchUser = (event) => {
         event.preventDefault();
         this.setState({ usersDisplayed: [], loading: true });
         let usersSearched = [];

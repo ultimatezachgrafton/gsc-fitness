@@ -39,13 +39,20 @@ class App extends Component {
 
 export default App;
 
-// Implement profile functionality:
-//      5. inbox
-//      6. "object object" issue w createdString
-//
-// CSS
-// Add header w/ ben info, social media
-// max-height to tables w/o pagination, limit number shown
-//
+// Testing:
+// Delete all DB data, add new data legitimately:
+// Register users
+// Add workouts for admin
+// Add workouts for clients
+// Add nuts for admin
+// Add nuts for clients
+// Send messages to client
+// Send messages to admin from client
+// Click through all links
+// ChangePassword
+// ChangeProfile number
 // Confirm authenticate process works on each page before it loads
 // Confirm history operates correctly (user-profiles might be wonky)
+
+// CSS
+// Add header w/ ben info, social media, inbox

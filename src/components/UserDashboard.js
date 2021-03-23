@@ -27,6 +27,7 @@ export default function AdminUserProfile() {
     const [nutritionValue, setNutritionValue] = useState();
     const [workoutsVisible, setWorkoutsVisible] = useState(false);
     const [nutritionVisible, setNutritionVisible] = useState(false);
+    
     const [loading, setLoading] = useState(false);
     const history = useHistory();
 
@@ -104,10 +105,25 @@ export default function AdminUserProfile() {
         setWorkoutValue(callbackData);
     };
 
+    const toggleWorkoutHistory = () => {
+        if (workoutsVisible) {
+            setWorkoutsVisible(false);
+        } else { 
+            setWorkoutsVisible(true);
+        }
+    }
+
+    const toggleNutritionHistory = () => {
+        if (nutritionVisible) {
+            setNutritionVisible(false);
+        } else { 
+            setNutritionVisible(true);
+        }
+    }
+
     return (
         <div>
             <Inbox />
-            {/* {this.state.client.lastName}, {this.state.client.firstName} */}
             <strong>Email: </strong> email <br />
             <strong>Phone: </strong> phone <br />
             <strong>Birthdate: </strong> birthdate <br />
@@ -125,12 +141,12 @@ export default function AdminUserProfile() {
                 <textarea className="form-control" id="edit-workout-text" onChange={handleChangeWorkout}
                     ref={workoutRef} value={workoutValue} rows="3">
                 </textarea>
-                <Button className="btn btn-primary w-30 mt-3" onClick={() => setWorkoutsVisible(true)}>
+                <Button className="btn btn-primary w-30 mt-3" onClick={toggleWorkoutHistory}>
                     <strong> Show Workout History</strong>
                 </Button>
             </div> <br />
 
-            {workoutsVisible && workoutsFromDatabase !== null ?
+            { workoutsVisible && workoutsFromDatabase !== null ?
                 <div className="div-wlist">
                     {loading ? "...loading..." : workoutsFromDatabase.length > 0 ?
                         <HistoryList items={workoutsFromDatabase} callback={handleCallback} />
@@ -143,12 +159,12 @@ export default function AdminUserProfile() {
                 <textarea className="form-control" id="edit-workout-text" onChange={handleChangeNutrition}
                     ref={nutritionRef} value={nutritionValue} rows="3">
                 </textarea>
-                <Button className="btn btn-primary w-30 mt-3" onClick={() => setNutritionVisible(true)}>
+                <Button className="btn btn-primary w-30 mt-3" onClick={toggleNutritionHistory}>
                     <strong> Show Nutrition History</strong>
                 </Button>
             </div> <br />
 
-            {nutritionVisible && nutritionFromDatabase !== null ?
+            { nutritionVisible && nutritionFromDatabase !== null ?
                 <div className="div-nlist">
                     {loading ? "...loading..." : nutritionFromDatabase.length > 0 ?
                         <HistoryList items={nutritionFromDatabase} />
@@ -156,7 +172,6 @@ export default function AdminUserProfile() {
                 </div> : null
             }
 
-            {/* <Button className="p-0" variant="link" onClick={messageBen}>Message Ben</Button> */}
             <Button className="p-0" variant="link" onClick={handleLogout}>Log Out</Button>
         </div>
     )

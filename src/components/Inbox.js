@@ -1,59 +1,78 @@
 import React, { useRef, useState, useEffect } from 'react';
-import Modal from "react-bootstrap/Modal";
-import { Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext.js';
-import { checkAdminStatus, searchMessageDatabase, sendMessageFromInbox, updateIsUnread } from '../firebase.js';
+import { checkAdminStatus, searchMessageDatabase, searchUserDatabase, sendMessageFromInbox, updateIsUnread } from '../firebase.js';
+import Modal from "react-bootstrap/Modal";
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export default function Inbox() {
 
-    const ADMIN_EMAIL = "ben@ben.com";
+    const ADMIN_EMAIL = "graftontrainingsystems@gmail.com";
+    const recipientRef = useRef();
+    const textRef = useRef();
     const { currentUser, setCurrentUser } = useAuth();
-    const [isUserAdmin, setIsUserAdmin] = useState();
+    const [isUserAdmin, setIsUserAdmin] = useState(null);
     const [messages, setMessages] = useState([]);
     const [selectedMessage, setSelectedMessage] = useState('');
     const [messagesDisplayed, setMessagesDisplayed] = useState([]);
+    const [usersFromDatabase, setUsersFromDatabase] = useState([]);
     const [recipient, setRecipient] = useState();
     const [isInboxOpen, setIsInboxOpen] = useState(false);
-    const [value, setValue] = useState();
+    const [recipientValue, setSearchValue] = useState();
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const [show, setShow] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
 
     useEffect(() => {
 
         const checkIsAdmin = async () => {
-            setLoading(true);
-            setIsUserAdmin(true);
-            setLoading(false);
+            if (isUserAdmin === null) {
+                setLoading(true);
+                const data = await checkAdminStatus(currentUser.email);
+                setIsUserAdmin(data);
+                setLoading(false);
+                console.log(isUserAdmin)
+            };
         };
 
         const fetchMessagesFromDatabase = async () => {
-            if (messages.length === 0) {
-                setLoading(true);
-                // await setMessages(searchMessageDatabase(currentUser.email));
-                const data = await searchMessageDatabase(currentUser.email);
-                setMessages(data);
-                console.log(messages)
+            console.log(isUserAdmin)
+            if (isUserAdmin !== null) {
+                if (messages.length === 0) {
+                    setLoading(true);
+                    const data = await searchMessageDatabase(currentUser.email);
+                    setMessages(data);
+                    setLoading(false);
+                };
             };
         };
 
         checkIsAdmin();
         fetchMessagesFromDatabase();
-    }, [currentUser.email, recipient, messages, isInboxOpen, messagesDisplayed]);
+    }, [currentUser.email, isUserAdmin, recipient, messages, isInboxOpen, messagesDisplayed]);
 
-    const openInbox = async () => {
-        await setIsInboxOpen(true);
+    const openInbox = () => {
+        if (isInboxOpen) {
+            setIsInboxOpen(false);
+        } else {
+            setIsInboxOpen(true);
+        }
     };
 
     const openMessage = async (m) => {
+        setLoading(true);
         await updateIsUnread(currentUser.email);
-        // render textarea
-        // get message
-        if (isUserAdmin) {
-            setRecipient(ADMIN_EMAIL);
-        } else {
-            setRecipient("not admin")
-        };
 
+        setSelectedMessage(m);
+        handleShowModal();
+
+        setLoading(false);
+    }
+
+    const openNewMessage = async () => {
+        setLoading(true);
+        const m = { createdString: '', senderEmail: '', text: '' };
         setSelectedMessage(m);
         handleShowModal();
 
@@ -64,43 +83,77 @@ export default function Inbox() {
     const handleShowModal = () => setShow(true);
 
     const sendMessage = () => {
-        sendMessageFromInbox(currentUser.email, recipient, value);
+        if (recipientRef.current.value.length > 0 && textRef.current.value.length > 0) {
+            if (!isUserAdmin) {
+                setRecipient(ADMIN_EMAIL);
+            } else {
+                setRecipient(recipientRef.current.value);
+            };
+            sendMessageFromInbox(currentUser.email, recipient, textRef.current.value);
+        } else {
+            setError('Please fill out all fields')
+        }
     };
 
-    const handleChange = (e) => {
-        setValue(e.target.value);
+    const fetchMoreData = () => {
+        if (messages.length >= 50) {
+            this.setState({ hasMore: false });
+            return;
+        }
+
+        setTimeout(() => {
+            setMessages.concat(Array.from({ length: 20 }));
+        }, 500);
     };
 
     return (
         <div>
             <Button onClick={openInbox}>Open Inbox</Button>
 
-            <div id="message-table">
-                {(isInboxOpen) ?
-                    (loading) ? "... loading ..." :
-                        messages.length > 0 ?
-                            messages.map((m) =>
+            {(isInboxOpen) ?
+                <Button onClick={openNewMessage}>New Message</Button> : ""}
+            {(isInboxOpen) && messages.length > 0 ?
+                (loading) ? "... loading ..." :
+                    <div id="message-table">
+                        <InfiniteScroll
+                            dataLength={messages.length}
+                            next={fetchMoreData}
+                            hasMore={hasMore}
+                            loader={<h4>Loading...</h4>}
+                            endMessage={
+                                <p style={{ textAlign: 'center' }}>
+                                    <b>Yay! You have seen it all</b>
+                                </p>
+                            }
+                        >
+                            {messages.map((m) =>
                                 <div onClick={() => openMessage(m)} key={m.createdString}>
                                     {m.text} {m.createdString} {m.email}
                                 </div>
-                            )
-                            : "Cannot find messages." : null}
-            </div>
+                            )}
+                        </InfiniteScroll>
+                    </div>
+                : ""}
 
             <Modal show={show} onHide={handleCloseModal}>
+                {error && <Alert variant="danger">{error}</Alert>}
                 <Modal.Header closeButton>
                     <Modal.Title>{selectedMessage.createdString} {selectedMessage.senderEmail}</Modal.Title>
                 </Modal.Header>
+                {isUserAdmin === true ?
+                    <Form inline>
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control type="email" className="w-25" defaultValue={recipient}
+                            ref={recipientRef} placeholder="Enter user's name or email" required />
+                    </Form>
+                    : ""}
                 <Modal.Body> {selectedMessage.text}
-                    <textarea> Response here </textarea>
+                    <textarea ref={textRef} required> </textarea>
                 </Modal.Body>
                 <Modal.Footer>
-                    <button onClick={sendMessage} className="btn btn-primary">Send</button>
+                    <Button type="submit" onClick={sendMessage} className="btn btn-primary">Send</Button>
                 </Modal.Footer>
             </Modal>
         </div>
     )
 }
-
-// set recipient
-// infinite scroll

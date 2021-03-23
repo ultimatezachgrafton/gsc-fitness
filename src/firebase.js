@@ -73,11 +73,12 @@ export async function searchWorkoutDatabase(emailRef) {
 
 // Adds workout to client's collection
 export async function addClientWorkoutData(clientEmailRef, textRef) {
+    const timestamp = Number(new Date());
     db.collection("users").doc(clientEmailRef).collection("workouts").add({
         email: clientEmailRef,
         text: textRef,
         created: firebase.firestore.FieldValue.serverTimestamp(),
-        createdString: firebase.firestore.FieldValue.serverTimestamp().toString()
+        createdString: new Date(timestamp).toDateString()
     }).then(function () {
         console.log("saved");
     }).catch(function (error) {
@@ -105,11 +106,12 @@ export async function searchNutritionDatabase(emailRef) {
 
 // Adds nutrition plan to client's collection
 export async function addNutritionPlanData(clientEmailRef, textRef) {
+    const timestamp = Number(new Date());
     colRef.doc(clientEmailRef).collection("nutrition").add({
         email: clientEmailRef,
         text: textRef,
         created: firebase.firestore.FieldValue.serverTimestamp(),
-        createdString: firebase.firestore.FieldValue.serverTimestamp().toString()
+        createdString: new Date(timestamp).toDateString()
     }).then(function () {
         console.log("saved");
     }).catch(function (error) {
@@ -134,11 +136,12 @@ export async function searchMessageDatabase(emailRef) {
 
 // Sends message to recipient
 export function sendMessageFromInbox(emailRef, recipientRef, textRef) {
+    const timestamp = Number(new Date());
     colRef.doc(recipientRef).collection("messages").add({
         senderEmail: emailRef,
         text: textRef,
         created: firebase.firestore.FieldValue.serverTimestamp(),
-        createdString: firebase.firestore.FieldValue.serverTimestamp().toString(),
+        createdString: new Date(timestamp).toDateString(),
         isUnread: true
     }).then(function () {
         console.log("saved");
