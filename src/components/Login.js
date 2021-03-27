@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Form, Button, Card, Alert } from 'react-bootstrap';
+import { Form, Alert } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useHistory } from 'react-router-dom';
 import { checkAdminStatus } from '../firebase';
-import Header from '/Header';
-import "../css/Login.css";
+import Header from './Header';
+import "../css/InputForms.css";
 
 export default function Login() {
     const emailRef = useRef();
@@ -57,28 +57,35 @@ export default function Login() {
 
     return (
         <div>
+            <Header />
 
-            <Card>
-                <Card.Body>
-                    <h2>Log In</h2>
+            <body className="align">
+                <div className="grid">
                     {error && <Alert variant="danger">{error}</Alert>}
                     <Form onSubmit={handleSubmit}>
-                        <Form.Group id="email">
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" ref={emailRef} required/>
-                        </Form.Group>
-                        <Form.Group id="password">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" ref={passwordRef} required/>
-                        </Form.Group>
-                        <Button disabled={loading} type="submit">Submit</Button>
+                        <div className="form_field">
+                            <Form.Group id="email">
+                                <Form.Control type="email" ref={emailRef} placeholder="Email" required />
+                            </Form.Group>
+                        </div>
+                        <div className="form_field">
+                            <Form.Group id="password">
+                                <Form.Control type="password" ref={passwordRef} placeholder="Password" required />
+                            </Form.Group>
+                        </div>
+                        <div className="form_field">
+                            {/* <Button disabled={loading} type="submit">SIGN IN</Button> */}
+                            <input type="submit" value="Sign In"/>
+
+                        </div>
                     </Form>
                     <div className="w-100 text-center mt-3">
                         <Link to="/change-password">Forgot Password?</Link>
                     </div>
-                </Card.Body>
-            </Card>
-            <div className="text-center mt-2"><Link to="/sign-up">Or Sign Up Here</Link></div>
+
+                    <div className="text-center mt-2"><Link to="/sign-up">Sign Up Here</Link></div>
+                </div>
+            </body>
         </div>
     )
 }

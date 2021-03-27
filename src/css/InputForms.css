@@ -1,0 +1,91 @@
+  .align {
+    display: grid;
+    place-items: center;
+  }
+  
+  /* helpers/grid.css */
+  
+  .grid {
+    inline-size: 90%;
+    margin-inline: auto;
+    max-inline-size: 20rem;
+  }
+  
+  /* layout/base.css */
+  
+  :root {
+    --htmlFontSize: 100%;
+    --bodyBackgroundColor: #2c3338;
+    --bodyColor: var(--baseColor);
+    --bodyFontFamily: "Open Sans";
+    --bodyFontFamilyFallback: sans-serif;
+    --bodyFontSize: 0.875rem;
+    --bodyFontWeight: 400;
+    --bodyLineHeight: 1.5;
+  }
+  
+  * {
+    box-sizing: inherit;
+  }
+  
+  html {
+    box-sizing: border-box;
+    font-size: var(--htmlFontSize);
+  }
+  
+  body {
+    background-color: var(--bodyBackgroundColor);
+    color: var(--bodyColor);
+    font-family: var(--bodyFontFamily), var(--bodyFontFamilyFallback);
+    font-size: var(--bodyFontSize);
+    font-weight: var(--bodyFontWeight);
+    line-height: var(--bodyLineHeight);
+    margin: 0;
+    min-block-size: 100vh;
+  }
+  
+  /* modules/anchor.css */
+  
+  :root {
+    --anchorColor: #eee;
+  }
+  
+  a {
+    color: var(--anchorColor);
+    outline: 0;
+    text-decoration: none;
+  }
+  
+  a:focus,
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  input {
+    background-image: none;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    transition: background-color 0.3s;
+    inline-size: 100%;
+  }
+  
+  input[type="submit"] {
+    cursor: pointer;
+    background-color: #ea4c88;
+    border-radius: .25rem;
+    color: #eee;
+    background-color:#d44179;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding:.75rem;
+  }
+  
+  /* modules/text.css */
+  
+  .text--center {
+    text-align: center;
+  }
