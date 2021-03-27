@@ -5,7 +5,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { useHistory } from 'react-router-dom';
 import { getUserData, searchWorkoutDatabase, searchNutritionDatabase } from '../firebase.js';
 import HistoryList from './HistoryList';
-import Inbox from './Inbox'
 
 export default function AdminUserProfile() {
     const workoutRef = useRef();
@@ -27,7 +26,9 @@ export default function AdminUserProfile() {
     const [nutritionValue, setNutritionValue] = useState();
     const [workoutsVisible, setWorkoutsVisible] = useState(false);
     const [nutritionVisible, setNutritionVisible] = useState(false);
-    
+    const [isWorkoutsEmpty, setIsWorkoutsEmpty] = useState(true);
+    const [isNutritionEmpty, setIsNutritionEmpty] = useState(true);
+
     const [loading, setLoading] = useState(false);
     const history = useHistory();
 
@@ -38,7 +39,6 @@ export default function AdminUserProfile() {
                 setLoading(true);
                 if (currentUser.email !== null) {
                     const data = await getUserData(currentUser.email);
-                    console.log(data);
 
                     setClientEmail(data.email);
                     setClientBirthdate(data.birthDate);
@@ -52,36 +52,51 @@ export default function AdminUserProfile() {
         const getInitialWorkoutData = async () => {
             if (clientEmail !== null && workoutsFromDatabase === null && !loading) {
                 setLoading(true);
-                const data = await searchWorkoutDatabase(clientEmail).catch(error => "error");
-                if (data.length > 0) {
-                    console.log(data);
-                    setWorkoutsFromDatabase(data);
-                    setCurrentWorkout(data[0].text);
-                    setWorkoutValue(data[0].text);
-                }
+                searchWorkouts();
                 setLoading(false);
             }
         };
 
         const getInitialNutritionData = async () => {
-            if (clientEmail !== null && nutritionFromDatabase === null && !loading) {
+            if (clientEmail !== null && nutritionFromDatabase === null && isNutritionEmpty && !loading) {
                 setLoading(true);
-                const data = await searchNutritionDatabase(clientEmail).catch(error => "error");
-                if (data.length > 0) {
-                    console.log(data);
-                    setNutritionFromDatabase(data);
-                    setCurrentNutritionPlan(data[0].text);
-                    setNutritionValue(data[0].text);
-                }
+                searchNutritionPlans();
                 setLoading(false);
             }
         };
+
+        const searchWorkouts = async () => {
+            if (!isWorkoutsEmpty) {
+                const data = await searchWorkoutDatabase(clientEmail).catch(error => "error");
+                if (data.length > 0) {
+                    setWorkoutsFromDatabase(data);
+                    setCurrentWorkout(data[0].text);
+                    setWorkoutValue(data[0].text);
+                } else {
+                    setIsWorkoutsEmpty(false);
+                }
+            }
+        }
+
+        const searchNutritionPlans = async () => {
+            if (!isNutritionEmpty) {
+                const data = await searchNutritionDatabase(clientEmail).catch(error => "error");
+                if (data.length > 0) {
+                    setNutritionFromDatabase(data);
+                    setCurrentNutritionPlan(data[0].text);
+                    setNutritionValue(data[0].text);
+                } else {
+                    setIsNutritionEmpty(false);
+                }
+            }
+        }
 
         getClientDataFromDatabase();
         getInitialWorkoutData();
         getInitialNutritionData();
     }, [currentUser.email, clientEmail, workoutsFromDatabase, nutritionFromDatabase, currentWorkout,
-        currentNutritionPlan, workoutValue, nutritionValue, loading, history, logout]);
+        currentNutritionPlan, workoutValue, nutritionValue, isWorkoutsEmpty, isNutritionEmpty,
+        loading, history, logout]);
 
     const handleLogout = async () => {
         setError('');
@@ -108,7 +123,7 @@ export default function AdminUserProfile() {
     const toggleWorkoutHistory = () => {
         if (workoutsVisible) {
             setWorkoutsVisible(false);
-        } else { 
+        } else {
             setWorkoutsVisible(true);
         }
     }
@@ -116,22 +131,17 @@ export default function AdminUserProfile() {
     const toggleNutritionHistory = () => {
         if (nutritionVisible) {
             setNutritionVisible(false);
-        } else { 
+        } else {
             setNutritionVisible(true);
         }
     }
 
     return (
         <div>
-            <Inbox />
             <strong>Email: </strong> email <br />
             <strong>Phone: </strong> phone <br />
             <strong>Birthdate: </strong> birthdate <br />
             <strong>Joined: </strong> joinDate <br />
-
-            <Link to="/update-profile" className="btn btn-primary w-30 mt-3">
-                <strong>Update Profile</strong>
-            </Link>
 
             <strong>Current weight: </strong> currentWeight <br />
             <strong>Notes: </strong> notes <br />
@@ -141,13 +151,14 @@ export default function AdminUserProfile() {
                 <textarea className="form-control" id="edit-workout-text" onChange={handleChangeWorkout}
                     ref={workoutRef} value={workoutValue} rows="3">
                 </textarea>
+                { !isWorkoutsEmpty ? 
                 <Button className="btn btn-primary w-30 mt-3" onClick={toggleWorkoutHistory}>
                     <strong> Show Workout History</strong>
-                </Button>
+                </Button> : null }
             </div> <br />
 
             { workoutsVisible && workoutsFromDatabase !== null ?
-                <div className="div-wlist">
+                <div>
                     {loading ? "...loading..." : workoutsFromDatabase.length > 0 ?
                         <HistoryList items={workoutsFromDatabase} callback={handleCallback} />
                         : "No workout history yet!"}
@@ -159,19 +170,23 @@ export default function AdminUserProfile() {
                 <textarea className="form-control" id="edit-workout-text" onChange={handleChangeNutrition}
                     ref={nutritionRef} value={nutritionValue} rows="3">
                 </textarea>
+                { !isNutritionEmpty ? 
                 <Button className="btn btn-primary w-30 mt-3" onClick={toggleNutritionHistory}>
                     <strong> Show Nutrition History</strong>
-                </Button>
+                </Button> : null }
             </div> <br />
 
             { nutritionVisible && nutritionFromDatabase !== null ?
-                <div className="div-nlist">
+                <div>
                     {loading ? "...loading..." : nutritionFromDatabase.length > 0 ?
                         <HistoryList items={nutritionFromDatabase} />
                         : "No nutrition plans yet!"}
                 </div> : null
             }
 
+            <Link to="/change-password" className="btn btn-primary w-30 mt-3">
+                <strong>Change Password</strong>
+            </Link>
             <Button className="p-0" variant="link" onClick={handleLogout}>Log Out</Button>
         </div>
     )

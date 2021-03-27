@@ -5,7 +5,8 @@ import { Link, useHistory } from 'react-router-dom';
 import { updateUserDataFromSignUp } from '../firebase.js';
 
 export default function SignUp() {
-    const nameRef = useRef();
+    const firstNameRef = useRef();
+    const lastNameRef = useRef();
     const phoneRef = useRef();
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -28,7 +29,8 @@ export default function SignUp() {
             // Check if email already exists.
             await signup(emailRef.current.value, passwordRef.current.value);
             
-            await updateUserDataFromSignUp(nameRef.current.value, phoneRef.current.value, emailRef.current.value);
+            await updateUserDataFromSignUp(firstNameRef.current.value, lastNameRef.current.value, 
+                phoneRef.current.value, emailRef.current.value);
             history.push('/');
         } catch {
             setError('Failed to create account. Please try again.');
@@ -45,8 +47,13 @@ export default function SignUp() {
                     {error && <Alert variant="danger">{error}</Alert>}
                     <Form onSubmit={handleSubmit}>
                         <Form.Group id="name">
-                            <Form.Label>Name</Form.Label>
-                            <Form.Control type="name" ref={nameRef} required>
+                            <Form.Label>First Name</Form.Label>
+                            <Form.Control type="name" ref={firstNameRef} required>
+                            </Form.Control>
+                        </Form.Group>
+                        <Form.Group id="name">
+                            <Form.Label>Last Name</Form.Label>
+                            <Form.Control type="name" ref={lastNameRef} required>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group id="phone">
@@ -57,6 +64,11 @@ export default function SignUp() {
                         <Form.Group id="email">
                             <Form.Label>Email</Form.Label>
                             <Form.Control type="email" ref={emailRef} required>
+                            </Form.Control>
+                        </Form.Group>
+                        <Form.Group id="phone">
+                            <Form.Label>Birthdate</Form.Label>
+                            <Form.Control type="phone" ref={phoneRef} required>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group id="password">
@@ -73,7 +85,7 @@ export default function SignUp() {
                     </Form>
                 </Card.Body>
             </Card>
-            <div className="text-center mt-2"><Link to="./Login">Or Log In Here</Link></div>
+            <div className="text-center mt-2"><Link to="/">Or Log In Here</Link></div>
         </div>
     )
 }

@@ -12,16 +12,6 @@ export default function ChangePassword() {
     const [loading, setLoading] = useState(false);
     const history = useHistory();
 
-    useEffect(() => {
-        // if currentUser matches the url
-        const pathname = window.location.pathname;
-        const userName = pathname.split("/");
-        console.log(currentUser.uid);
-        if ((currentUser.email) !== userName[2]) {
-            handleLogout();
-        }
-    });
-
     async function handleSubmit(e) {
         e.preventDefault();
 
@@ -66,12 +56,12 @@ export default function ChangePassword() {
                   </Button>
               </Form>
               <div className="w-100 text-center mt-3">
-                  <Link to="/login">Login</Link>
+                  <Link to="/">Login</Link>
               </div>
             </Card.Body>
           </Card>
             <div className="w-100 text-center mt-2">
-               Need an account? <Link to="/signup">Sign Up</Link>
+               Need an account? <Link to="/sign-up">Sign Up</Link>
             </div>
         </>
   )

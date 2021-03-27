@@ -3,6 +3,8 @@ import { Form, Button, Card, Alert } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useHistory } from 'react-router-dom';
 import { checkAdminStatus } from '../firebase';
+import Header from '/Header';
+import "../css/Login.css";
 
 export default function Login() {
     const emailRef = useRef();
@@ -27,7 +29,7 @@ export default function Login() {
                 if (adminStatus === true) {
                     const url = "/admin/" + currentUser.uid;
                     history.push(url);
-                } else if (adminStatus === false) {
+                } else {
                     const url = "/users/" + currentUser.uid;
                     history.push(url);
                 }
@@ -72,11 +74,11 @@ export default function Login() {
                         <Button disabled={loading} type="submit">Submit</Button>
                     </Form>
                     <div className="w-100 text-center mt-3">
-                        <Link to="/forgot-password">Forgot Password?</Link>
+                        <Link to="/change-password">Forgot Password?</Link>
                     </div>
                 </Card.Body>
             </Card>
-            <div className="text-center mt-2"><Link to="./SignUp">Or Sign Up Here</Link></div>
+            <div className="text-center mt-2"><Link to="/sign-up">Or Sign Up Here</Link></div>
         </div>
     )
 }

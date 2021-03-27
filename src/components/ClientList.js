@@ -69,15 +69,15 @@ export default class ClientList extends Component {
     searchUser = (event) => {
         event.preventDefault();
         this.setState({ usersDisplayed: [], loading: true });
-        let usersSearched = [];
-        let maxSearchResults = 10;
+        const usersSearched = [];
+        const maxSearchResults = 10;
 
-        // Searches for email, then last name, then first name
+        // Searches for email, then last name, then first name.
         for (let i = 0; i < this.state.usersFromDatabase.length && i < maxSearchResults; i++) {
 
             if (this.state.usersFromDatabase[i].email.toLowerCase().includes(this.state.userSearchValue.toLowerCase())) {
-                this.setState({ usersDisplayed: [this.state.usersFromDatabase[i]], loading: false });
-                return;
+                // this.setState({ usersDisplayed: [this.state.usersFromDatabase[i]]});
+                usersSearched.push(this.state.usersFromDatabase[i]);
 
             } else if (this.state.usersFromDatabase[i].lastName.toLowerCase().includes(this.state.userSearchValue.toLowerCase())) {
                 usersSearched.push(this.state.usersFromDatabase[i]);
@@ -86,7 +86,12 @@ export default class ClientList extends Component {
                 usersSearched.push(this.state.usersFromDatabase[i]);
             }
 
-            this.setState({ usersDisplayed: usersSearched });
+            // Removes duplicates.
+            let usersSorted = usersSearched.filter((i, index) => {
+                return usersSearched.indexOf(i) === index;
+            });
+
+            this.setState({ usersDisplayed: usersSorted });
         }
         this.setState({ loading: false });
     }
@@ -110,7 +115,7 @@ export default class ClientList extends Component {
                         : "Cannot find this user."}
                 </div>
 
-                <Pagination loadPages={this.loadUserPages} items={this.state.usersFromDatabase} 
+                <Pagination loadPages={this.loadUserPages} items={this.state.usersFromDatabase}
                     maxPerPage={this.state.maxPerPage} />
             </div >
         )

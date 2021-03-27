@@ -16,6 +16,7 @@ const app = firebase.initializeApp({
 const db = firebase.firestore(app);
 const user = app.auth().currentUser;
 const colRef = db.collection("users");
+const short = require('short-uuid');
 
 export async function getCurrentUserEmail() {
     if (user !== null) {
@@ -119,6 +120,7 @@ export async function addNutritionPlanData(clientEmailRef, textRef) {
     });
 }
 
+// Inactive but preserved here for future updates
 export async function searchMessageDatabase(emailRef) {
     const messages = [];
     // fetch data
@@ -134,7 +136,7 @@ export async function searchMessageDatabase(emailRef) {
     return messages;
 }
 
-// Sends message to recipient
+// Sends message to recipient. Inactive but preserved here for future updates.
 export function sendMessageFromInbox(emailRef, recipientRef, textRef) {
     const timestamp = Number(new Date());
     colRef.doc(recipientRef).collection("messages").add({
@@ -150,7 +152,7 @@ export function sendMessageFromInbox(emailRef, recipientRef, textRef) {
     });
 }
 
-// Updates isUnread field
+// Updates isUnread field. Inactive but preserved here for future updates.
 export function updateIsUnread(recipientRef) {
     colRef.doc(recipientRef).collection("messages").add({
         isUnread: false
@@ -162,12 +164,16 @@ export function updateIsUnread(recipientRef) {
 }
 
 // Initially adds user's doc to that collection
-export async function updateUserDataFromSignUp(nameRef, phoneRef, emailRef) {
-    const docRef = db.collection("users").doc(emailRef);
+export async function updateUserDataFromSignUp(firstNameRef, lastNameRef, phoneRef, emailRef) {
+    const uuid = short.generate();
+    const docRef = colRef.doc(emailRef);
     docRef.set({
-        name: nameRef,
+        firstName: firstNameRef,
+        lastName: lastNameRef,
         phone: phoneRef,
-        email: emailRef
+        email: emailRef,
+        isAdmin: false,
+        uuid: uuid
     }).then(function () {
         console.log("saved");
     }).catch(function (error) {
@@ -175,7 +181,7 @@ export async function updateUserDataFromSignUp(nameRef, phoneRef, emailRef) {
     });
 }
 
-// Updates an existing user's data
+// Updates an existing user's data - currently inactive, but preserved here for future updates
 export async function updateUserDataFromProfile(phoneRef) {
     const emailRef = await getCurrentUserEmail();
 

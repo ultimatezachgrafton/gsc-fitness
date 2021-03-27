@@ -24,12 +24,13 @@ export default function AdminClientProfile(props) {
     const [clientBirthDate, setClientBirthdate] = useState();
     const [clientJoinDate, setClientJoinDate] = useState();
     const [clientDisplayName, setClientDisplayName] = useState();
-    const [clientCurrentWeight, setClientCurrentWeight] = useState();
     const [clientNotes, setClientNotes] = useState();
     const [workoutValue, setWorkoutValue] = useState();
     const [nutritionValue, setNutritionValue] = useState();
     const [workoutsVisible, setWorkoutsVisible] = useState(false);
     const [nutritionVisible, setNutritionVisible] = useState(false);
+    const [isWorkoutsEmpty, setIsWorkoutsEmpty] = useState(true);
+    const [isNutritionEmpty, setIsNutritionEmpty] = useState(true);
     const [loading, setLoading] = useState(false);
     const history = useHistory();
 
@@ -40,8 +41,7 @@ export default function AdminClientProfile(props) {
                 setLoading(true);
                 if (props.location.state.email !== null) {
                     const data = await getUserData(props.location.state.email);
-                    console.log(data)
-                    
+
                     setClientEmail(data.email);
                     setClientBirthdate(data.birthDate);
                     setClientDisplayName(data.joinDate);
@@ -54,13 +54,7 @@ export default function AdminClientProfile(props) {
         const getInitialWorkoutData = async () => {
             if (clientEmail !== null && workoutsFromDatabase === null && !loading) {
                 setLoading(true);
-                const data = await searchWorkoutDatabase(clientEmail).catch(error => "error");
-                if (data.length > 0) {
-                    console.log(data);
-                    setWorkoutsFromDatabase(data);
-                    setCurrentWorkout(data[0].text);
-                    setWorkoutValue(data[0].text);
-                }
+                searchWorkouts();
                 setLoading(false);
             }
         };
@@ -68,37 +62,65 @@ export default function AdminClientProfile(props) {
         const getInitialNutritionData = async () => {
             if (clientEmail !== null && nutritionFromDatabase === null && !loading) {
                 setLoading(true);
-                const data = await searchNutritionDatabase(clientEmail).catch(error => "error");
-                if (data.length > 0) {
-                    console.log(data);
-                    setNutritionFromDatabase(data);
-                    setCurrentNutritionPlan(data[0].text);
-                    setNutritionValue(data[0].text);
-                }
+                searchNutritionPlans();
                 setLoading(false);
             }
         };
 
+        const searchWorkouts = async () => {
+            if (!isWorkoutsEmpty) {
+                const data = await searchWorkoutDatabase(clientEmail).catch(error => "error");
+                if (data.length > 0) {
+                    setWorkoutsFromDatabase(data);
+                    setCurrentWorkout(data[0].text);
+                    setWorkoutValue(data[0].text);
+                } else {
+                    setIsWorkoutsEmpty(false);
+                }
+            }
+        }
+
+        const searchNutritionPlans = async () => {
+            if (!isNutritionEmpty) {
+                const data = await searchNutritionDatabase(clientEmail).catch(error => "error");
+                if (data.length > 0) {
+                    setNutritionFromDatabase(data);
+                    setCurrentNutritionPlan(data[0].text);
+                    setNutritionValue(data[0].text);
+                } else {
+                    setIsNutritionEmpty(false);
+                }
+            }
+        }
+
         getClientDataFromDatabase();
         getInitialWorkoutData();
         getInitialNutritionData();
-    }, [clientEmail, props, workoutsFromDatabase, nutritionFromDatabase, currentWorkout, 
-        currentNutritionPlan, workoutValue, nutritionValue, loading]);
-
-    // utilize getUserData and populate profile with said data
+    }, [props, clientEmail, workoutsFromDatabase, nutritionFromDatabase, currentWorkout,
+        currentNutritionPlan, workoutValue, nutritionValue, isNutritionEmpty, isWorkoutsEmpty, loading]);
 
     async function addWorkout(e) {
         e.preventDefault();
-        setLoading(true);
-        await addClientWorkoutData(props.location.state.email, workoutRef.current.value);
-        setLoading(false);
+        if (workoutRef.current.value !== '') {
+            setLoading(true);
+            await addClientWorkoutData(props.location.state.email, workoutRef.current.value);
+            if (isWorkoutsEmpty) {
+                setIsWorkoutsEmpty(false);
+            }
+            setLoading(false);
+        }
     }
 
     async function addNutritionPlan(e) {
         e.preventDefault();
-        setLoading(true);
-        await addNutritionPlanData(props.location.state.email, nutritionRef.current.value);
-        setLoading(false);
+        if (nutritionRef.current.value !== '') {
+            setLoading(true);
+            await addNutritionPlanData(props.location.state.email, nutritionRef.current.value);
+            if (isNutritionEmpty) {
+                setIsNutritionEmpty(false);
+            }
+            setLoading(false);
+        }
     };
 
     async function deleteWorkoutValue(e) {
@@ -124,7 +146,7 @@ export default function AdminClientProfile(props) {
     }
 
     const handleLogout = async () => {
-        // setError('');
+        setError('');
         try {
             await logout();
             history.push("/");
@@ -143,11 +165,6 @@ export default function AdminClientProfile(props) {
                 <strong>Birthdate: </strong> {clientBirthDate} <br />
                 <strong>Joined: </strong> {clientJoinDate} <br />
 
-                <Link to="/update-profile" className="btn btn-primary w-30 mt-3">
-                    <strong>Update {clientDisplayName}'s Profile</strong>
-                </Link>
-
-                <strong>Current weight: </strong> {clientCurrentWeight} <br />
                 <strong>Notes: </strong> {clientNotes} <br />
 
                 <div className="form-group">
@@ -157,9 +174,11 @@ export default function AdminClientProfile(props) {
                     </textarea>
                     <button onClick={deleteWorkoutValue} className="btn btn-primary">New Workout</button>
                     <button onClick={addWorkout} className="btn btn-primary">Submit</button>
-                    <Button className="btn btn-primary w-30 mt-3" onClick={() => setWorkoutsVisible(true)}>
-                        <strong> Show Workout History</strong>
-                    </Button>
+                    {!isWorkoutsEmpty ?
+                        <Button className="btn btn-primary w-30 mt-3" onClick={() => setWorkoutsVisible(true)}>
+                            <strong> Show Workout History</strong>
+                        </Button> : null
+                    }
                 </div> <br />
 
                 {workoutsVisible && workoutsFromDatabase !== null ?
@@ -177,9 +196,10 @@ export default function AdminClientProfile(props) {
                     </textarea>
                     <button onClick={deleteNutritionValue} className="btn btn-primary">New Plan</button>
                     <button onClick={addNutritionPlan} className="btn btn-primary">Submit</button>
-                    <Button className="btn btn-primary w-30 mt-3" onClick={() => setNutritionVisible(true)}>
-                        <strong> Show Nutrition History</strong>
-                    </Button>
+                    {!isNutritionEmpty ?
+                        <Button className="btn btn-primary w-30 mt-3" onClick={() => setNutritionVisible(true)}>
+                            <strong> Show Nutrition History</strong>
+                        </Button> : null}
                 </div> <br />
 
                 {nutritionVisible && nutritionFromDatabase !== null ?

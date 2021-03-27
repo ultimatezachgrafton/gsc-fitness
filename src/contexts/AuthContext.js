@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
         return auth.signInWithEmailAndPassword(email, password);
     };
 
-    function logout(email, password) {
+    function logout() {
         return auth.signOut();
     };
 

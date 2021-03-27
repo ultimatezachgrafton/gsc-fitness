@@ -9,12 +9,18 @@ function ClientTable(props) {
         let user = props.users[i];
         tableRows.push(<tr key={user.email}>
             <td><Link to={{
-                pathname: `/client/profile/${user.uuid}`,
+                pathname: `/client/profile/` + user.uuid,
                 state: { email: user.email }
             }} >
                 {user.lastName}, {user.firstName}
             </Link> </td>
-            < td > <a href={`/client/profile/${user.uuid}`}>{user.email}</a></td >
+            < td > <Link to={{
+                pathname: `/client/profile/` + user.uuid,
+                state: { email: user.email }
+            }} >
+                {user.email}
+            </Link>
+            </td >
             <td>{user.phone}</td>
         </tr >);
     }

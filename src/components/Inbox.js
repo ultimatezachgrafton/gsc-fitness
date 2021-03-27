@@ -23,6 +23,7 @@ export default function Inbox() {
     const [error, setError] = useState('');
     const [show, setShow] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+    const [isInboxEmpty, setIsInboxEmpty] = useState(false);
 
     useEffect(() => {
 
@@ -32,25 +33,26 @@ export default function Inbox() {
                 const data = await checkAdminStatus(currentUser.email);
                 setIsUserAdmin(data);
                 setLoading(false);
-                console.log(isUserAdmin)
+                console.log(isUserAdmin);
             };
         };
 
         const fetchMessagesFromDatabase = async () => {
-            console.log(isUserAdmin)
-            if (isUserAdmin !== null) {
-                if (messages.length === 0) {
-                    setLoading(true);
-                    const data = await searchMessageDatabase(currentUser.email);
+            if (isUserAdmin !== null && messages.length === 0 && !isInboxEmpty) {
+                setLoading(true);
+                const data = await searchMessageDatabase(currentUser.email);
+                if (data.length === 0) {
+                    setIsInboxEmpty(true);
+                } else {
                     setMessages(data);
-                    setLoading(false);
-                };
+                }
+                setLoading(false);
             };
         };
 
         checkIsAdmin();
         fetchMessagesFromDatabase();
-    }, [currentUser.email, isUserAdmin, recipient, messages, isInboxOpen, messagesDisplayed]);
+    }, [currentUser.email, isUserAdmin, recipient, messages, isInboxOpen, isInboxEmpty, setIsInboxEmpty, messagesDisplayed]);
 
     const openInbox = () => {
         if (isInboxOpen) {
