@@ -1,0 +1,99 @@
+.wrapper-user {
+    margin: 0 auto;
+    width:55% !important;
+    margin-top: 55px !important;
+    background-color: transparent;
+    margin:auto;
+    padding:25px;
+}
+
+.wrapper-user h3 {
+    text-transform: none;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e0e0e0;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+}
+
+.wrapper-user .form_field {
+    margin-top: 10px;
+}
+
+.wrapper-user .form_field input[type=text] {
+    margin: 0px 0px 0px 10px;
+    background-color: #919aa3 !important;
+    border: 1px solid black;
+    width: 60px !important;
+    height: 25px;
+    font-size: 20px;
+    color: black;
+    font-weight: 100;
+}
+
+.wrapper-user .form_field input[type=text]:focus {
+    border:none !important;
+}
+
+.wrapper-user .inline {
+    display:flex;
+}
+
+.wrapper-user h4 {
+    color: #919aa3;
+    border-bottom: 1px solid #919aa3;
+}
+
+.wrapper-user .form-group .workout-data .text-area {
+    white-space: pre-wrap;
+    margin: 20px 0px 50px 0px;    
+}
+
+.wrapper-user .history {
+    border-top: 1px solid #919aa3;
+}
+
+.list {
+    margin-top: 30px;
+}
+
+#btn-weight {
+    font-size: 14px;
+    margin-left: 7px;
+    text-decoration: underline;
+}
+
+#btn-weight:hover, #btn-weight:active, #btn-weight:focus {
+    background-color: transparent !important;
+    border-color: transparent !important;
+}
+
+.dateString {
+    color:#919aa3;
+}
+
+
+@media screen and (min-width: 992px) {
+    .wrapper-user {
+        max-width: 55% !important;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .wrapper-user {
+        width: 70% !important;
+    }
+}
+
+@media screen and (min-width: 576px) {
+    .wrapper-user {
+        width: 90% !important;
+    }
+}
+
+@media screen and (max-width: 575.9px) {
+    .wrapper-user {
+        width: 100% !important;
+    }
+}

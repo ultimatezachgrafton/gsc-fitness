@@ -1,0 +1,23 @@
+body {
+    background-color: #2c3338;
+    color: var(--bodyColor);
+    font-family: var(--bodyFontFamily), var(--bodyFontFamilyFallback);
+    font-size: var(--bodyFontSize);
+    font-weight: var(--bodyFontWeight);
+    line-height: var(--bodyLineHeight);
+}
+
+:root {
+    --anchorColor: #eee;
+}
+  
+a {
+    color: var(--anchorColor);
+    outline: 0;
+    text-decoration: none;
+}
+  
+a:focus,
+a:hover {
+    text-decoration: underline;
+}

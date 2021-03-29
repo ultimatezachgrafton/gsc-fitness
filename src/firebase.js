@@ -59,7 +59,7 @@ export async function searchWorkoutDatabase(emailRef) {
     const workouts = [];
     if (emailRef !== null) {
         // fetch data
-        await colRef.doc(emailRef).collection("workouts").orderBy("created", "desc").limit(3)
+        await colRef.doc(emailRef).collection("workouts").orderBy("created", "desc").limit(5)
             .get().then(function (querySnapshot) {
                 querySnapshot.forEach(function (doc) {
                     console.log(doc.id, " => ", doc.data());
@@ -69,6 +69,7 @@ export async function searchWorkoutDatabase(emailRef) {
                 console.log("Error getting document:", error);
             });;
     }
+    console.log(workouts)
     return workouts;
 }
 
@@ -89,10 +90,9 @@ export async function addClientWorkoutData(clientEmailRef, textRef) {
 
 export async function searchNutritionDatabase(emailRef) {
     const nutrition = [];
-    console.log(emailRef)
     if (emailRef !== null) {
         // fetch data
-        await colRef.doc(emailRef).collection("nutrition").orderBy("created", "desc").limit(3)
+        await colRef.doc(emailRef).collection("nutrition").orderBy("created", "desc").limit(5)
             .get().then(function (querySnapshot) {
                 querySnapshot.forEach(function (doc) {
                     console.log(doc.id, " => ", doc.data());
@@ -103,6 +103,16 @@ export async function searchNutritionDatabase(emailRef) {
             });;
     }
     return nutrition;
+}
+
+export function addClientWeightData(clientRef, weightRef) {
+    colRef.doc(clientRef).add({
+        weight: weightRef
+    }).then(function () {
+        console.log("saved");
+    }).catch(function (error) {
+        console.log("error");
+    });
 }
 
 // Adds nutrition plan to client's collection
@@ -164,15 +174,20 @@ export function updateIsUnread(recipientRef) {
 }
 
 // Initially adds user's doc to that collection
-export async function updateUserDataFromSignUp(firstNameRef, lastNameRef, phoneRef, emailRef) {
+export async function updateUserDataFromSignUp(firstNameRef, lastNameRef, phoneRef, emailRef, birthRef, notesRef) {
     const uuid = short.generate();
     const docRef = colRef.doc(emailRef);
+    const timestamp = Number(new Date());
     docRef.set({
         firstName: firstNameRef,
         lastName: lastNameRef,
         phone: phoneRef,
         email: emailRef,
+        birthdate: birthRef,
+        notes: notesRef,
         isAdmin: false,
+        date: firebase.firestore.FieldValue.serverTimestamp(),
+        joindate: new Date(timestamp).toDateString(),
         uuid: uuid
     }).then(function () {
         console.log("saved");

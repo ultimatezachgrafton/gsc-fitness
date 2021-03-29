@@ -57,33 +57,31 @@ export default function Login() {
 
     return (
         <div>
-            <Header />
-
             <body className="align">
                 <div className="grid">
-                    {error && <Alert variant="danger">{error}</Alert>}
-                    <Form onSubmit={handleSubmit}>
-                        <div className="form_field">
-                            <Form.Group id="email">
-                                <Form.Control type="email" ref={emailRef} placeholder="Email" required />
-                            </Form.Group>
+                    <div className="login">
+                        <Header />
+                        {error && <Alert variant="danger">{error}</Alert>}
+                        <Form onSubmit={handleSubmit}>
+                            <div className="form_field">
+                                <Form.Group id="email">
+                                    <Form.Control type="email" ref={emailRef} placeholder="Email" required />
+                                </Form.Group>
+                            </div>
+                            <div className="form_field">
+                                <Form.Group id="password">
+                                    <Form.Control type="password" ref={passwordRef} placeholder="Password" required />
+                                </Form.Group>
+                            </div>
+                            <div className="form_field">
+                                <input type="submit" value="Sign In" />
+                            </div>
+                        </Form>
+                        <div className="w-100 text-center mt-3">
+                            <Link to="/change-password">Forgot Password?</Link>
                         </div>
-                        <div className="form_field">
-                            <Form.Group id="password">
-                                <Form.Control type="password" ref={passwordRef} placeholder="Password" required />
-                            </Form.Group>
-                        </div>
-                        <div className="form_field">
-                            {/* <Button disabled={loading} type="submit">SIGN IN</Button> */}
-                            <input type="submit" value="Sign In"/>
-
-                        </div>
-                    </Form>
-                    <div className="w-100 text-center mt-3">
-                        <Link to="/change-password">Forgot Password?</Link>
+                        <div className="text-center mt-2"><Link to="/sign-up">Sign Up Here</Link></div>
                     </div>
-
-                    <div className="text-center mt-2"><Link to="/sign-up">Sign Up Here</Link></div>
                 </div>
             </body>
         </div>

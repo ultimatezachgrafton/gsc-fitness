@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { Form, Button, Card, Alert } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
@@ -26,43 +26,29 @@ export default function ChangePassword() {
             setError("Failed to reset password");
         }
 
-            setLoading(false);
-      }
-
-      async function handleLogout() {
-        setError('');
-        try {
-            await logout();
-            history.push("/");
-        } catch {
-            setError('Failed to log out');
-        }
+        setLoading(false);
     }
 
     return (
-        <>
-          <Card>
-            <Card.Body>
-              <h2 className="text-center mb-4">Password Reset</h2>
-              {error && <Alert variant="danger">{error}</Alert>}
-              {message && <Alert variant="success">{message}</Alert>}
-              <Form onSubmit={handleSubmit}>
-                  <Form.Group id="email">
-                      <Form.Label>Email</Form.Label>
-                      <Form.Control type="email" ref={emailRef} required />
-                  </Form.Group>
-                  <Button disabled={loading} className="w-100" type="submit">
-                      Reset Password
-                  </Button>
-              </Form>
-              <div className="w-100 text-center mt-3">
-                  <Link to="/">Login</Link>
-              </div>
-            </Card.Body>
-          </Card>
-            <div className="w-100 text-center mt-2">
-               Need an account? <Link to="/sign-up">Sign Up</Link>
-            </div>
-        </>
-  )
+        <div>
+            <body className="align">
+                <div className="grid">
+                    <div className="pass">
+                        <h2 className="text-center mb-4">Reset Password</h2>
+                        {error && <Alert variant="danger">{error}</Alert>}
+                        {message && <Alert variant="success">{message}</Alert>}
+                        <Form onSubmit={handleSubmit}>
+                            <div className="form_field">
+                                <Form.Group id="email">
+                                    <Form.Control type="email" ref={emailRef} placeholder="Email" required />
+                                </Form.Group>
+                            </div>
+                            <input type="submit" value="Submit" />
+                        </Form>
+                    </div>
+                    <div className="text-center mt-2"><Link to="/">Back to Log In</Link></div>
+                </div >
+            </body>
+        </div>
+    )
 }

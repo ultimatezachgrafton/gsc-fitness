@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { searchUserDatabase } from '../firebase.js';
 import ClientTable from './ClientTable.js';
 import Pagination from './Pagination.js';
@@ -99,12 +99,10 @@ export default class ClientList extends Component {
     render() {
         return (
             <div>
+                <h4 className="mb-4">Click a client to go to their profile.</h4>
                 <Form inline>
-                    <Form.Control type="text" className="w-25" defaultValue={this.state.userSearchValue}
+                    <Form.Control type="text" className="w-100 mb-3" defaultValue={this.state.userSearchValue}
                         onChange={this.handleChange} placeholder="Enter user's name or email" />
-                    <Button type="submit" onClick={this.searchUser} className="mb-2">
-                        <strong>Find User</strong>
-                    </Button>
                 </Form>
                 <div id="user-table">
                     {(this.state.loading) ? "... loading ..." : this.state.usersDisplayed.length > 0 ?

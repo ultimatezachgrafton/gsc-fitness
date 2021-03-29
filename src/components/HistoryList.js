@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Button } from 'react-bootstrap';
-import WorkoutNutritionTable from './WorkoutNutritionTable.js';
+import HistoryTable from './HistoryTable.js';
 import Pagination from './Pagination.js';
 
 export default class HistoryList extends Component {
@@ -26,20 +25,27 @@ export default class HistoryList extends Component {
         this.setState({ currentItem: this.state.itemsFromDatabase[0].text, loading: false }, this.checkItems);
     };
 
+    componentDidUpdate = async (update) => {
+        if (this.state.itemsFromDatabase !== update.items) {
+            this.setState({ loading: true });
+            this.setState({ itemsFromDatabase: update.items, currentItem: update.items[0].text, loading: false }, this.checkItems);
+        }
+    }
+
     checkItems = () => {
         if (this.state.currentItem.length > 0) {
             this.loadPages(1);
         }
     };
-    
+
     async loadPages(pageNumber) {
         this.setState({ loading: true });
         let currentPage = [];
-        
+
         const initialElement = (pageNumber - 1) * this.state.maxPerPage;
         const finalPageElement = this.state.itemsFromDatabase.length - (this.state.itemsFromDatabase.length % this.state.maxPerPage);
         const remainder = (this.state.itemsFromDatabase.length % this.state.maxPerPage);
-        
+
         // If there is only one page worth of items
         if (initialElement === finalPageElement) {
             for (let i = ((pageNumber - 1) * this.state.maxPerPage); i < initialElement + remainder; i++) {
@@ -54,7 +60,7 @@ export default class HistoryList extends Component {
             };
         };
     };
-    
+
     async handleChange(event) {
         await this.setState({ itemSearchValue: event.target.value });
 
@@ -68,11 +74,11 @@ export default class HistoryList extends Component {
     };
 
     searchItems = async (event) => {
-        
+
         event.preventDefault();
         this.setState({ itemsDisplayed: [], loading: true });
         let itemsSearched = [];
-        let maxSearchResults = 20;
+        let maxSearchResults = 10;
 
         // Searches for email, then last name, then first name
         for (let i = 0; i < this.state.itemsFromDatabase.length && i < maxSearchResults; i++) {
@@ -104,7 +110,7 @@ export default class HistoryList extends Component {
 
                 <div id="item-table">
                     {(this.state.loading) ? "... loading ..." : this.state.itemsFromDatabase.length > 0 ?
-                        <WorkoutNutritionTable
+                        <HistoryTable
                             key={this.state.itemsFromDatabase}
                             items={this.state.itemsDisplayed}
                             callback={this.handleCallback}

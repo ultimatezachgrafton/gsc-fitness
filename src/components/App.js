@@ -10,6 +10,7 @@ import AdminClientProfile from './AdminClientProfile';
 import SignUp from './SignUp';
 import Login from './Login';
 import ChangePassword from './ChangePassword';
+import '../css/App.css';
 
 class App extends Component {
     render() {
@@ -36,7 +37,6 @@ class App extends Component {
 
 export default App;
 
-// CSS
-// Add header w/ ben info, social media
-// Users should not have editable text areas
-// Ben needs "sign up here" function in AdminDashboard
+// Notes for future development:
+// 1. Notes
+// 2. Weight + graph.

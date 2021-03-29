@@ -1,0 +1,163 @@
+.btn {
+    color: #eee;
+    border: none;
+    background-color: transparent;
+}
+
+.btn:hover, .btn:active {
+    background-color: #ea4c88 !important;
+    box-shadow: none !important;
+    color: white;
+}
+
+.btn:focus {
+    background-color: transparent;
+    box-shadow: none !important;
+}
+
+#btn-logout:hover, #btn-logout:active, #btn-logout:focus {
+    background-color: transparent !important;
+}
+
+a:hover {
+    color:#fff !important;
+}
+
+textarea {
+    color: black !important;
+    background: #919aa3 !important;
+    box-shadow: black !important;
+}
+
+.wrapper {
+    font-family: 'Josefin Sans', sans-serif;
+    align-items: center;
+    margin: 0 auto;
+    box-shadow: 0 1px 20px 0 rgba(69, 90, 100, .08);
+    padding-bottom: 0px;
+    padding-top: 10px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.wrapper .info {
+    margin: 25px 200px 25px 0px;
+    display: block;
+    justify-content: space-between;
+}
+
+.wrapper .info .data {
+    margin-bottom: 10px;
+}
+
+.wrapper h3,
+.wrapper h2 {
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e0e0e0;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+}
+
+.wrapper .info h4,
+.wrapper .notes h3 {
+    color: #919aa3 !important;
+    border-bottom: none !important;
+}
+
+.wrapper .notes h3 {
+    margin-bottom: 0px !important;
+}
+
+.wrapper .info p {
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #eee;
+}
+
+.wrapper .workout-data h4 {
+    color: #919aa3 !important;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.wrapper .notes {
+    margin: none !important;
+    padding: none !important;
+}
+
+.wrapper .notes {
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+}
+
+.wrapper .notes .notes-text {
+    padding: 7px 0px 0px 10px;
+}
+
+.wrapper .history {
+    display:flex;
+}
+
+.wrapper .list {
+    display:flex;
+}
+
+.form_field {
+    margin-top: 25px;
+}
+
+.new-workout, .new-plan {
+    margin-bottom: 0px;
+}
+
+.text-area {
+    white-space: pre-wrap;
+}
+
+@media screen and (min-width: 992px) {
+
+    .wrapper {
+        max-width: 55% !important;
+    }
+
+}
+
+@media screen and (min-width: 768px) {
+
+    .wrapper {
+        width: 85% !important;
+    }
+
+    .wrapper .info {
+        display: flex;
+    }
+        
+    .wrapper .info .data {
+        display: block !important;
+        margin: 0px 50px 0px 0px !important;
+    }
+
+    .wrapper .info .data h5 {
+        margin-left:0px !important;
+    }
+}
+
+@media screen and (min-width: 576px) {
+
+    .wrapper {
+        width: 90%;
+    }
+
+    .wrapper .info .data {
+        display:flex;
+    }
+
+    .wrapper .info .data h5 {
+        margin: 3px 0px 0px 12px;
+    }
+
+    .activity-table {
+        margin: 0px 5px 0px 5px;
+    }
+}
