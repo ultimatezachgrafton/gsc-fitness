@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "gts-fitness",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
